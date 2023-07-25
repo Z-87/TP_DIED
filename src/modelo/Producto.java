@@ -1,6 +1,6 @@
 package modelo;
 
-public class Producto {
+public class Producto implements Gestor {
   private String nombre;
   private String descripcion;
   private Double precioUnitario;
