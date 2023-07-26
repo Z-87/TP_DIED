@@ -1,5 +1,5 @@
 package modelo;
 
-public enum EstadoOrden {
+public enum ESTADO_ORDEN {
   PENDIENTE, EN_PROCESO, COMPLETADA;
 }
