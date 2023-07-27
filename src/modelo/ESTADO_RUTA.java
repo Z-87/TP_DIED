@@ -1,5 +1,6 @@
 package modelo;
 
-public class ESTADO_RUTA {
-    
+public enum ESTADO_RUTA {
+    OPERATIVA,
+    NO_OPERATIVA,
 }

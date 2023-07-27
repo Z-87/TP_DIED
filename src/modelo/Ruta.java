@@ -1,18 +1,25 @@
 package modelo;
 
+
+
 public class Ruta {
     String id_ruta;
-    Centro_Logistico origen;
-    Centro_Logistico destino;
-    int capacidad;
+    Centro_Logistico sucursal_origen;
+    Centro_Logistico sucursal_destino;
+    double capacidad;
     int duracion;
     ESTADO_RUTA estado;
 
-    public Ruta(String id_ruta, Centro_Logistico origen, Centro_Logistico destino, int capacidad, int duracion,
-            ESTADO_RUTA estado) {
+    
+
+    public Ruta() {
+    }
+
+    public Ruta(String id_ruta, Centro_Logistico sucursal_origen, Centro_Logistico sucursal_destino, double capacidad,
+            int duracion, ESTADO_RUTA estado) {
         this.id_ruta = id_ruta;
-        this.origen = origen;
-        this.destino = destino;
+        this.sucursal_origen = sucursal_origen;
+        this.sucursal_destino = sucursal_destino;
         this.capacidad = capacidad;
         this.duracion = duracion;
         this.estado = estado;
@@ -26,27 +33,27 @@ public class Ruta {
         this.id_ruta = id_ruta;
     }
 
-    public Centro_Logistico getOrigen() {
-        return origen;
+    public Centro_Logistico getSucursal_Origen() {
+        return sucursal_origen;
     }
 
-    public void setOrigen(Centro_Logistico origen) {
-        this.origen = origen;
+    public void setSucursal_Origen(Centro_Logistico sucursal_origen) {
+        this.sucursal_origen = sucursal_origen;
     }
 
-    public Centro_Logistico getDestino() {
-        return destino;
+    public Centro_Logistico getSucursal_Destino() {
+        return sucursal_destino;
     }
 
-    public void setDestino(Centro_Logistico destino) {
-        this.destino = destino;
+    public void setSucursal_Destino(Centro_Logistico sucursal_destino) {
+        this.sucursal_destino = sucursal_destino;
     }
 
     public int getCapacidad() {
         return capacidad;
     }
 
-    public void setCapacidad(int capacidad) {
+    public void setCapacidad(double capacidad) {
         this.capacidad = capacidad;
     }
 
@@ -65,6 +72,4 @@ public class Ruta {
     public void setEstado(ESTADO_RUTA estado) {
         this.estado = estado;
     }
-
-    
 }
