@@ -87,15 +87,17 @@ public class Grafo {
             conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
             tabla = conn.prepareStatement("SELECT * FROM st.Ruta");
             rs = tabla.executeQuery();
-            
+
             while(rs.next()){
                 Ruta aux = new Ruta();
                 aux.setId_ruta(rs.getString("id_ruta"));
+                String aux1=rs.getString("sucursal_origen");
+                String aux2=rs.getString("sucursal_destino");
                 aux.setSucursal_Origen((this.sucursales.stream()
-                                                        .filter(a -> (a.getId_logistico() = rs.getString("sucursal_origen")))
+                                                        .filter(a -> (a.getId_logistico() == aux1))
                                                         .collect(Collectors.toList())).get(0));
                 aux.setSucursal_Destino((this.sucursales.stream()
-                                                        .filter(a -> (a.getId_logistico() = rs.getString("sucursal_destino")))
+                                                        .filter(a -> (a.getId_logistico() == aux2))
                                                         .collect(Collectors.toList())).get(0));
                 aux.setEstado(ESTADO_RUTA.valueOf(rs.getString("estado")));
                 aux.setCapacidad(rs.getDouble("capacidad"));
