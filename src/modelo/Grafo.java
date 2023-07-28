@@ -16,11 +16,11 @@ public class Grafo {
 
     public void cargarSucursales(){
         Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
         try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
-            PreparedStatement tabla;
-            ResultSet rs;
             tabla = conn.prepareStatement("SELECT * FROM tp.Centro AS C JOIN tp.Centro_Logistico AS CL ON (CL.id_logistico = C.id_centro)");
             rs = tabla.executeQuery();
 
@@ -33,7 +33,8 @@ public class Grafo {
                 aux.setEstado(ESTADO_SUCURSAL.valueOf(rs.getString("estado")));
                 sucursales.add(aux);
             }
-
+            tabla.close();
+            rs.close();
             tabla = conn.prepareStatement("SELECT * FROM tp.Sucursal AS S JOIN tp.Centro_Logistico AS CL ON (CL.id_logistico = S.id_sucursal)");
             rs = tabla.executeQuery();
 
@@ -46,7 +47,8 @@ public class Grafo {
                 aux2.setEstado(ESTADO_SUCURSAL.valueOf(rs.getString("estado")));
                 sucursales.add(aux2);
             }
-
+            tabla.close();
+            rs.close();
             tabla = conn.prepareStatement("SELECT * FROM tp.Puerto AS P JOIN tp.Centro_Logistico AS CL ON (CL.id_logistico = P.id_sucursal)");
             rs = tabla.executeQuery();
 
@@ -65,15 +67,24 @@ public class Grafo {
         } catch(SQLException e){
             e.printStackTrace();
         }
+        finally { //Libera los recursos
+            if(rs!=null) try { rs.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+            if(tabla!=null) try { tabla.close(); }
+            catch (SQLException e) {e.printStackTrace(); }
+            if(conn!=null) try { conn.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+        }
+
     }
 
     public void cargarRutas() {
         Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
         try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
-            PreparedStatement tabla;
-            ResultSet rs;
             tabla = conn.prepareStatement("SELECT * FROM st.Ruta");
             rs = tabla.executeQuery();
             
@@ -90,7 +101,7 @@ public class Grafo {
                 aux.setCapacidad(rs.getDouble("capacidad"));
                 aux.setDuracion(rs.getInt("duracion"));
                 rutas.add(aux);
-            }
+            } //Captura las excepciones
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -98,57 +109,252 @@ public class Grafo {
         } catch (EnumConstantNotPresentException e){
             e.printStackTrace();
         } 
-
-
-    }
-
-    public void cargarRuta(){
-
-    }
-
-    public void eliminarRuta(){
-
-    }
-
-    public void cargarSucursal(){
+        finally { //Libera los recursos
+            if(rs!=null) try { rs.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+            if(tabla!=null) try { tabla.close(); }
+            catch (SQLException e) {e.printStackTrace(); }
+            if(conn!=null) try { conn.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+        }
 
     }
 
-    public void eliminarSucursal(){
-        
-    }
-
-    public void cargarCentro(Centro a){
+    public void cargarRuta(Ruta r){
         Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
+        if(!rutas.contains(r)){
+            try {
+            Class.forName("org.postgresql.Driver");
+            conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
+            tabla = conn.prepareStatement("INSERT INTO tp.Ruta(id_ruta, sucursal_origen, sucursal_destino, estado, capacidad, duracion) VALUES ("+r.getId_ruta()+","+r.getSucursal_Origen()+","+r.getSucursal_Destino()+","+((r.getEstado()).toString())+","+r.getCapacidad()+","+r.getDuracion()+")");
+            rs = tabla.executeQuery();
+
+            rutas.add(r);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            finally {
+                if(rs!=null) try { rs.close(); }
+                catch (SQLException e) { e.printStackTrace(); }
+                if(tabla!=null) try { tabla.close(); }
+                catch (SQLException e) {e.printStackTrace(); }
+                if(conn!=null) try { conn.close(); }
+                catch (SQLException e) { e.printStackTrace(); }
+            }
+        }
+    }
+
+    public void eliminarRuta(Ruta r){
+        Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
+        try{
+            Class.forName("org.postgresql.Driver");
+            conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
+            tabla = conn.prepareStatement("DELETE INTO tp.Ruta WHERE id_ruta ="+r.getId_ruta());
+            rs = tabla.executeQuery();
+            this.rutas.remove(r);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if(rs!=null) try { rs.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+            if(tabla!=null) try { tabla.close(); }
+            catch (SQLException e) {e.printStackTrace(); }
+            if(conn!=null) try { conn.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+
+    public void cargarSucursal(Sucursal a){
+        Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
         if(!sucursales.contains(a)){
             try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
-            PreparedStatement tabla;
-            ResultSet rs;
-            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(id_logistico, nombre, estado, horario_apertura, horario_cierre) VALUES ("+a.getId_logistico()+","+a.getNombre()+","a.getEstado()+","+a.getHorario_apertura()+","+a.getHorario_cierre()+")");
+            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(id_logistico, nombre, estado, horario_apertura, horario_cierre) VALUES ("+a.getId_logistico()+","+a.getNombre()+","+((a.getEstado()).toString())+","+a.getHorario_apertura()+","+a.getHorario_cierre()+")");
             rs = tabla.executeQuery();
-            
+            tabla.close();
+            rs.close();
+            tabla = conn.prepareStatement("INSERT INTO tp.Sucursal(id_centro) VALUES ("+a.getId_logistico()+")");
+            rs = tabla.executeQuery();
+
             sucursales.add(a);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            finally {
+                if(rs!=null) try { rs.close(); }
+                catch (SQLException e) { e.printStackTrace(); }
+                if(tabla!=null) try { tabla.close(); }
+                catch (SQLException e) {e.printStackTrace(); }
+                if(conn!=null) try { conn.close(); }
+                catch (SQLException e) { e.printStackTrace(); }
+            }
+        }
+    }
+
+    public void eliminarSucursal(Sucursal b){
+        Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
+        try{
+            Class.forName("org.postgresql.Driver");
+            conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
+            tabla = conn.prepareStatement("DELETE INTO tp.Centro_Logistico WHERE id_logistico ="+b.getId_logistico());
+            rs = tabla.executeQuery();
+            tabla.close();
+            rs.close();
+            tabla = conn.prepareStatement("DELETE INTO tp.Sucursal WHERE id_sucursal="+b.getId_logistico());
+            rs = tabla.executeQuery();
+            this.sucursales.remove(b);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if(rs!=null) try { rs.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+            if(tabla!=null) try { tabla.close(); }
+            catch (SQLException e) {e.printStackTrace(); }
+            if(conn!=null) try { conn.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+
+    public void cargarCentro(Centro a){
+        Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
+        if(!sucursales.contains(a)){
+            try {
+            Class.forName("org.postgresql.Driver");
+            conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
+            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(id_logistico, nombre, estado, horario_apertura, horario_cierre) VALUES ("+a.getId_logistico()+","+a.getNombre()+","+((a.getEstado()).toString())+","+a.getHorario_apertura()+","+a.getHorario_cierre()+")");
+            rs = tabla.executeQuery();
+            tabla.close();
+            rs.close();
+            tabla = conn.prepareStatement("INSERT INTO tp.Centro(id_centro) VALUES ("+a.getId_logistico()+")");
+            rs = tabla.executeQuery();
+
+            sucursales.add(a);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            finally {
+                if(rs!=null) try { rs.close(); }
+                catch (SQLException e) { e.printStackTrace(); }
+                if(tabla!=null) try { tabla.close(); }
+                catch (SQLException e) {e.printStackTrace(); }
+                if(conn!=null) try { conn.close(); }
+                catch (SQLException e) { e.printStackTrace(); }
+            }
         }
         
     }
 
-    public void eliminarCentro(){
-        
+    public void eliminarCentro(Centro b){
+        Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
+        try{
+            Class.forName("org.postgresql.Driver");
+            conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
+            tabla = conn.prepareStatement("DELETE INTO tp.Centro_Logistico WHERE id_logistico ="+b.getId_logistico());
+            rs = tabla.executeQuery();
+            tabla.close();
+            rs.close();
+            tabla = conn.prepareStatement("DELETE INTO tp.Centro WHERE id_centro="+b.getId_logistico());
+            rs = tabla.executeQuery();
+            this.sucursales.remove(b);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if(rs!=null) try { rs.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+            if(tabla!=null) try { tabla.close(); }
+            catch (SQLException e) {e.printStackTrace(); }
+            if(conn!=null) try { conn.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+        }
     }
 
-    public void cargarPuerto(){
+    public void cargarPuerto(Puerto a){
+        Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
+        if(!sucursales.contains(a)){
+            try {
+            Class.forName("org.postgresql.Driver");
+            conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
+            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(id_logistico, nombre, estado, horario_apertura, horario_cierre) VALUES ("+a.getId_logistico()+","+a.getNombre()+","+((a.getEstado()).toString())+","+a.getHorario_apertura()+","+a.getHorario_cierre()+")");
+            rs = tabla.executeQuery();
+            tabla.close();
+            rs.close();
+            tabla = conn.prepareStatement("INSERT INTO tp.Puerto(id_puerto) VALUES ("+a.getId_logistico()+")");
+            rs = tabla.executeQuery();
 
+            sucursales.add(a);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            finally {
+                if(rs!=null) try { rs.close(); }
+                catch (SQLException e) { e.printStackTrace(); }
+                if(tabla!=null) try { tabla.close(); }
+                catch (SQLException e) {e.printStackTrace(); }
+                if(conn!=null) try { conn.close(); }
+                catch (SQLException e) { e.printStackTrace(); }
+            }
+        }
     }
 
-    public void eliminarPuerto(){
-        
+    public void eliminarPuerto(Puerto b){
+        Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
+        try{
+            Class.forName("org.postgresql.Driver");
+            conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
+            tabla = conn.prepareStatement("DELETE INTO tp.Centro_Logistico WHERE id_logistico ="+b.getId_logistico());
+            rs = tabla.executeQuery();
+            tabla.close();
+            rs.close();
+            tabla = conn.prepareStatement("DELETE INTO tp.Puerto WHERE id_puerto="+b.getId_logistico());
+            rs = tabla.executeQuery();
+            this.sucursales.remove(b);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if(rs!=null) try { rs.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+            if(tabla!=null) try { tabla.close(); }
+            catch (SQLException e) {e.printStackTrace(); }
+            if(conn!=null) try { conn.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+        }
     }
 
 }
