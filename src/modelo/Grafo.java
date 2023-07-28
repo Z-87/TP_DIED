@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 public class Grafo {
@@ -365,5 +366,99 @@ public class Grafo {
       return sucursales;
     }
 
-    
+/*   
+    public ArrayList<ArrayList<Centro_Logistico>> obtenerCaminos(Centro_Logistico origen, Centro_Logistico destino){
+        //Usamos recorrido en profundidad
+        ArrayList<ArrayList<Centro_Logistico>> caminos = new ArrayList<ArrayList<Centro_Logistico>>();
+        ArrayList<Centro_Logistico> camino = new ArrayList<>();
+        Stack<Centro_Logistico> pendientes = new Stack<Centro_Logistico>();
+        ArrayList<Centro_Logistico> marcados = new ArrayList<Centro_Logistico>();
+        int cont = 0, nivel = 0;
+        marcados.add(a);
+        pendientes.push(a);
+
+        while(!pendientes.isEmpty()){
+            Centro_Logistico actual = pendientes.pop();
+            List<Centro_Logistico> adyacentes = this.getAdyasentes(actual);
+            if(actual.equals(destino)){
+                camino.add(actual);
+                caminos.add(cont, camino);
+                camino.remove(actual);
+            }
+            else if(!adyacentes.isEmpty()){
+                camino.add(actual);
+                for(Centro_Logistico v : adyacentes){
+                    if(!marcados.contains(v)){
+                        pendientes.push(v);
+                        marcados.add(v);
+                    }
+                    nivel++
+                }
+            }
+            else{
+                camino.remove(camino.size()-1);
+            }
+            
+            nivel++;
+        }
+        return;
+    }
+*/
+
+    public List<Centro_Logistico> getAdyacentes(Centro_Logistico a){
+        return this.getRutas().stream()
+                              .filter(c -> a.equals(c.getSucursal_Origen()))
+                              .map(g -> g.getSucursal_Destino())
+                              .collect(Collectors.toList());
+    }
+
+    public ArrayList<ArrayList<Centro_Logistico>> obtenerCaminos(Centro_Logistico origen, Centro_Logistico destino){
+        //Usamos recorrido en profundidad
+        ArrayList<ArrayList<Centro_Logistico>> caminos = new ArrayList<ArrayList<Centro_Logistico>>();
+        ArrayList<Centro_Logistico> camino = new ArrayList<>();
+        Stack<Centro_Logistico> pendientes = new Stack<Centro_Logistico>();
+        ArrayList<Centro_Logistico> marcados = new ArrayList<Centro_Logistico>();
+        int nivel = 0, cont=0, camin=0;
+        ArrayList<Integer> arr = new ArrayList<Integer>();
+        marcados.add(origen);
+        pendientes.push(origen);
+        
+        while(!pendientes.isEmpty()){
+            Centro_Logistico actual = pendientes.pop();
+            List<Centro_Logistico> adyacentes = this.getAdyacentes(actual);
+            arr.add(nivel, 0);
+            cont=0;
+            if(actual.equals(destino)){
+                camino.add(actual);
+                caminos.add(camin, camino);
+                camino.remove(actual);
+                camin++;
+            }
+            else if(!adyacentes.isEmpty()){
+                camino.add(actual);
+                for(Centro_Logistico v : adyacentes){
+                    pendientes.push(v);
+                    arr.set(nivel, cont);
+                    cont++;
+                }
+            }
+            else{
+                if(actual.equals(destino)){
+                    camino.add(actual);
+                    caminos.add(camin, camino);
+                    camino.remove(actual);
+                    camin++;
+                }
+                else if(arr.get(nivel) != 0){
+                    camino.remove(camino.size()-1);
+                    arr.set(nivel, (arr.get(nivel)-1));
+                }
+                else{
+                    nivel--;
+                }
+            }
+            nivel++;
+        }
+        return caminos;
+    }
 }
