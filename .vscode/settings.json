@@ -1,0 +1,8 @@
+{
+  "java.configuration.runtimes": [
+    
+  ],
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar"
+]
+}

@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 
 public class Grafo {
     
-    ArrayList<Ruta> rutas;
-    ArrayList<Centro_Logistico> sucursales;
+    ArrayList<Ruta> rutas = new ArrayList<>();
+    ArrayList<Centro_Logistico> sucursales = new ArrayList<>();
 
     public void cargarSucursales(){
         Connection conn = null;
@@ -20,7 +20,7 @@ public class Grafo {
         ResultSet rs = null;
         try {
             Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
+            conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
             tabla = conn.prepareStatement("SELECT * FROM tp.Centro AS C JOIN tp.Centro_Logistico AS CL ON (CL.id_logistico = C.id_centro)");
             rs = tabla.executeQuery();
 
@@ -49,7 +49,7 @@ public class Grafo {
             }
             tabla.close();
             rs.close();
-            tabla = conn.prepareStatement("SELECT * FROM tp.Puerto AS P JOIN tp.Centro_Logistico AS CL ON (CL.id_logistico = P.id_sucursal)");
+            tabla = conn.prepareStatement("SELECT * FROM tp.Puerto AS P JOIN tp.Centro_Logistico AS CL ON (CL.id_logistico = P.id_puerto)");
             rs = tabla.executeQuery();
 
             while(rs.next()){
@@ -84,8 +84,8 @@ public class Grafo {
         ResultSet rs = null;
         try {
             Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("SELECT * FROM st.Ruta");
+            conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
+            tabla = conn.prepareStatement("SELECT * FROM tp.Ruta");
             rs = tabla.executeQuery();
 
             while(rs.next()){
@@ -359,4 +359,13 @@ public class Grafo {
         }
     }
 
+    public ArrayList<Ruta> getRutas() {
+      return rutas;
+    }
+
+    public ArrayList<Centro_Logistico> getSucursales() {
+      return sucursales;
+    }
+
+    
 }
