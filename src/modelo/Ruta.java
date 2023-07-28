@@ -6,8 +6,8 @@ public class Ruta {
     String id_ruta;
     Centro_Logistico sucursal_origen;
     Centro_Logistico sucursal_destino;
-    double capacidad;
-    int duracion;
+    Double capacidad;
+    Integer duracion;
     ESTADO_RUTA estado;
 
     
@@ -49,7 +49,7 @@ public class Ruta {
         this.sucursal_destino = sucursal_destino;
     }
 
-    public int getCapacidad() {
+    public Double getCapacidad() {
         return capacidad;
     }
 
@@ -57,7 +57,7 @@ public class Ruta {
         this.capacidad = capacidad;
     }
 
-    public int getDuracion() {
+    public Integer getDuracion() {
         return duracion;
     }
 
