@@ -6,25 +6,30 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Gestor_Producto {
-
-  public Producto crearProducto(String nombre, String descripcion, Double precio_unitario, Double precio_kg) {
-    Producto producto = null;
+public class Gestor_Stock {
+  public Stock crearStock(Integer cantidad_unit, Double cantidad_kg, Producto producto, Centro_Logistico sucursal) {
+    Stock stock = null;
     Connection conn = null;
     PreparedStatement tabla = null;
     ResultSet rs = null;
     try {
       Class.forName("org.postgresql.Driver");
       conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-      rs = conn.prepareStatement("SELECT id_producto FROM tp.producto ORDER BY id_producto DESC LIMIT 1").executeQuery();
+      rs = conn.prepareStatement("SELECT id_stock FROM tp.stock ORDER BY id_stock DESC LIMIT 1").executeQuery();
       rs.next();
-      String id_siguiente = Integer.toString(Integer.parseInt(rs.getString("id_producto")) + 1);
+      String id_siguiente = Integer.toString(Integer.parseInt(rs.getString("id_stock")) + 1);
       tabla = conn.prepareStatement(
-        "INSERT INTO tp.producto(id_producto, nombre, descripcion, precio_unit, precio_kg)" + 
-        "VALUES ('" + id_siguiente + "','" + nombre + "','" + descripcion + "','" + precio_unitario + "','" + precio_kg + "')"
+        "INSERT INTO tp.stock(id_stock, id_logistico, id_producto, cantidad_unit, cantidad_kg)" + 
+        "VALUES ('" + 
+          id_siguiente + "','" + 
+          sucursal.getId_logistico() + "','" + 
+          producto.getId_producto() + "','" + 
+          cantidad_unit + "','" + 
+          cantidad_kg + 
+        "')"
       );
       tabla.executeUpdate();
-      producto = new Producto(id_siguiente, nombre, descripcion, precio_unitario, precio_kg);
+      stock = new Stock(id_siguiente, cantidad_unit, cantidad_kg, producto, sucursal);
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (SQLException e) {
@@ -40,19 +45,18 @@ public class Gestor_Producto {
       if(conn!=null) try { conn.close(); }
       catch (SQLException e) { e.printStackTrace(); }
     }
-    return producto;
+    return stock;
   }
 
-  public void eliminarProducto(Producto producto) {
+  public void eliminarStock(Stock stock) {
     Connection conn = null;
     PreparedStatement tabla = null;
     ResultSet rs = null;
-    //cuando se elimina un producto hay que eliminar todos los 'Stock' y las 'Orden_Provision' asociados.
     try {
       Class.forName("org.postgresql.Driver");
       conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
       tabla = conn.prepareStatement(
-        "DELETE FROM tp.producto WHERE id_producto = '" + producto.getId_producto() + "'"
+        "DELETE FROM tp.stock WHERE id_stock = '" + stock.getId_stock() + "'"
       );
       tabla.executeUpdate();
     } catch (ClassNotFoundException e) {

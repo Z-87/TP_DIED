@@ -1,6 +1,7 @@
 package modelo;
 
 public class Producto implements Gestor {
+  private String id_producto;
   private String nombre;
   private String descripcion;
   private Double precioUnitario;
@@ -9,7 +10,8 @@ public class Producto implements Gestor {
   public Producto() {
   }
 
-  public Producto(String nombre, String descripcion, Double precioUnitario, Double precioKg) {
+  public Producto(String id_producto, String nombre, String descripcion, Double precioUnitario, Double precioKg) {
+    this.id_producto = id_producto;
     this.nombre = nombre;
     this.descripcion = descripcion;
     this.precioUnitario = precioUnitario;
@@ -27,6 +29,9 @@ public class Producto implements Gestor {
   }
   public Double getPrecioKg() {
     return precioKg;
+  }
+  public String getId_producto() {
+    return id_producto;
   }
 
 }
