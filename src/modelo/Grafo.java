@@ -412,17 +412,23 @@ public class Grafo {
                               .collect(Collectors.toList());
     }
 
+    public Centro_Logistico consultarScursal_Id(String id){
+        return this.sucursales.stream().filter(a -> id.equals(a.getId_logistico())).collect(Collectors.toList()).get(0);
+    }
+
+    public Centro_Logistico consultarScursal_Nombre(String nombre){
+        return this.sucursales.stream().filter(a -> nombre.equals(a.getNombre())).collect(Collectors.toList()).get(0);
+    }
+
     public ArrayList<ArrayList<Centro_Logistico>> obtenerCaminos(Centro_Logistico origen, Centro_Logistico destino){
         //Usamos recorrido en profundidad
         ArrayList<ArrayList<Centro_Logistico>> caminos = new ArrayList<ArrayList<Centro_Logistico>>();
         ArrayList<Centro_Logistico> camino = new ArrayList<>();
         Stack<Centro_Logistico> pendientes = new Stack<Centro_Logistico>();
-        ArrayList<Centro_Logistico> marcados = new ArrayList<Centro_Logistico>();
         int nivel = 0, cont=0, camin=0;
         ArrayList<Integer> arr = new ArrayList<Integer>();
-        marcados.add(origen);
         pendientes.push(origen);
-        
+
         while(!pendientes.isEmpty()){
             Centro_Logistico actual = pendientes.pop();
             List<Centro_Logistico> adyacentes = this.getAdyacentes(actual);
@@ -434,7 +440,7 @@ public class Grafo {
                 camino.remove(actual);
                 camin++;
             }
-            else if(!adyacentes.isEmpty()){
+            if(!adyacentes.isEmpty()){
                 camino.add(actual);
                 for(Centro_Logistico v : adyacentes){
                     pendientes.push(v);
