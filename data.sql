@@ -36,3 +36,14 @@ INSERT INTO tp.Ruta(id_ruta, sucursal_origen, sucursal_destino, estado, capacida
   ('17', '8', '10', 'OPERATIVA', 100.00, 150),
   ('18', '9', '10', 'OPERATIVA', 100.00, 150);
   
+INSERT INTO tp.producto(id_producto, nombre, descripcion, precio_unit, precio_kg) VALUES
+  ('0', 'Salamin', 'Un salamin', 750.0, 1500.0),
+  ('1', 'Mortadela', 'Una mortadela', 500.0, 1500.0),
+  ('2', 'Roquefort', 'Un asco', null, 2250.0);
+
+INSERT INTO tp.stock(id_stock, id_producto, id_logistico, cantidad_unit, cantidad_kg) VALUES
+  ('0', '0', '0', 2000, 1000),
+  ('1', '1', '0', 500, 250),
+  ('2', '2', '0', null, 500),
+  ('3', '0', '3', 100, 50),
+  ('4', '1', '3', 200, 100);
