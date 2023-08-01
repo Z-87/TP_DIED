@@ -422,48 +422,66 @@ public class Grafo {
 
     public ArrayList<ArrayList<Centro_Logistico>> obtenerCaminos(Centro_Logistico origen, Centro_Logistico destino){
         //Usamos recorrido en profundidad
+        boolean volver = true;
+        List<Centro_Logistico> adyacentes;
         ArrayList<ArrayList<Centro_Logistico>> caminos = new ArrayList<ArrayList<Centro_Logistico>>();
-        ArrayList<Centro_Logistico> camino = new ArrayList<>();
+        Stack<Centro_Logistico> paso = new Stack<>();
         Stack<Centro_Logistico> pendientes = new Stack<Centro_Logistico>();
         int nivel = 0, cont=0, camin=0;
         ArrayList<Integer> arr = new ArrayList<Integer>();
         pendientes.push(origen);
 
         while(!pendientes.isEmpty()){
-            Centro_Logistico actual = pendientes.pop();
-            List<Centro_Logistico> adyacentes = this.getAdyacentes(actual);
-            arr.add(nivel, 0);
-            cont=0;
-            if(actual.equals(destino)){
-                camino.add(actual);
-                caminos.add(camin, camino);
-                camino.remove(actual);
-                camin++;
-            }
-            if(!adyacentes.isEmpty()){
-                camino.add(actual);
-                for(Centro_Logistico v : adyacentes){
-                    pendientes.push(v);
-                    arr.set(nivel, cont);
-                    cont++;
-                }
-            }
-            else{
+            if(volver){
+                Centro_Logistico actual = pendientes.pop();
+                adyacentes = this.getAdyacentes(actual);
+                paso.push(actual);
+                arr.add(nivel, 0);
+                cont=0;
                 if(actual.equals(destino)){
-                    camino.add(actual);
+                    ArrayList<Centro_Logistico> camino = new ArrayList<>();
+                    for(Centro_Logistico f : paso){
+                        //System.out.print(f.getNombre()+" -> ");
+                        camino.add(f);
+                    }
                     caminos.add(camin, camino);
-                    camino.remove(actual);
+                    //System.out.println("");
+                    paso.pop();
+                    //arr.set(nivel-1, 0);
+                    //nivel--;
+                    arr.set(nivel-1, arr.get(nivel-1)-1);
+                    volver = false;
                     camin++;
                 }
-                else if(arr.get(nivel) != 0){
-                    camino.remove(camino.size()-1);
-                    arr.set(nivel, (arr.get(nivel)-1));
+                else if(!adyacentes.isEmpty() && volver){
+                    for(Centro_Logistico v : adyacentes){
+                        pendientes.push(v);
+                        cont++;
+                        arr.set(nivel, cont);
+                    }
+                    nivel++;
+                }
+
+            }
+            else{
+                if(arr.get(nivel-1) > 0){
+                    //System.out.print(" arrI: "+arr.get(nivel-1));
+                    //arr.set(nivel-1, (arr.get(nivel-1)-1));
+                    volver = true;
+                    //System.out.print(" arrF: "+arr.get(nivel-1));
                 }
                 else{
+                    paso.pop();
+                    //System.out.print(" arrI: "+arr.get(nivel-1));
+                    //arr.set(nivel-1, 0);
+                    //System.out.print(" arrF: "+arr.get(nivel-1));
                     nivel--;
+                    arr.set(nivel-1, arr.get(nivel-1)-1);
+                    //if(arr.get(nivel-1) > 0){
+                    //    volver = true;
+                    //}
                 }
             }
-            nivel++;
         }
         return caminos;
     }
