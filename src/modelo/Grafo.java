@@ -366,45 +366,6 @@ public class Grafo {
       return sucursales;
     }
 
-/*   
-    public ArrayList<ArrayList<Centro_Logistico>> obtenerCaminos(Centro_Logistico origen, Centro_Logistico destino){
-        //Usamos recorrido en profundidad
-        ArrayList<ArrayList<Centro_Logistico>> caminos = new ArrayList<ArrayList<Centro_Logistico>>();
-        ArrayList<Centro_Logistico> camino = new ArrayList<>();
-        Stack<Centro_Logistico> pendientes = new Stack<Centro_Logistico>();
-        ArrayList<Centro_Logistico> marcados = new ArrayList<Centro_Logistico>();
-        int cont = 0, nivel = 0;
-        marcados.add(a);
-        pendientes.push(a);
-
-        while(!pendientes.isEmpty()){
-            Centro_Logistico actual = pendientes.pop();
-            List<Centro_Logistico> adyacentes = this.getAdyasentes(actual);
-            if(actual.equals(destino)){
-                camino.add(actual);
-                caminos.add(cont, camino);
-                camino.remove(actual);
-            }
-            else if(!adyacentes.isEmpty()){
-                camino.add(actual);
-                for(Centro_Logistico v : adyacentes){
-                    if(!marcados.contains(v)){
-                        pendientes.push(v);
-                        marcados.add(v);
-                    }
-                    nivel++
-                }
-            }
-            else{
-                camino.remove(camino.size()-1);
-            }
-            
-            nivel++;
-        }
-        return;
-    }
-*/
-
     public List<Centro_Logistico> getAdyacentes(Centro_Logistico a){
         return this.getRutas().stream()
                               .filter(c -> a.equals(c.getSucursal_Origen()))
