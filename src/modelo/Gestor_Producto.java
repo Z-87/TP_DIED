@@ -71,4 +71,37 @@ public class Gestor_Producto {
       catch (SQLException e) { e.printStackTrace(); }
     }
   }
+
+  public void editarProducto(Producto producto, Producto productoEditado) {
+    Connection conn = null;
+    PreparedStatement tabla = null;
+    ResultSet rs = null;
+    try {
+      Class.forName("org.postgresql.Driver");
+      conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
+      tabla = conn.prepareStatement(
+        "UPDATE tp.producto SET" + 
+          "nombre = '" + productoEditado.getNombre() + "', " +
+          "descripcion = '" + productoEditado.getDescripcion() + "', " +
+          "precio_unit = " + productoEditado.getPrecioUnitario() + ". " +
+          "precio_kg = " + productoEditado.getPrecioKg() + " " +
+        "WHERE id_producto = '" + producto.getId_producto() + "'"
+      );
+      tabla.executeUpdate();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (EnumConstantNotPresentException e){
+      e.printStackTrace();
+    } 
+    finally { //Libera los recursos
+      if(rs!=null) try { rs.close(); }
+      catch (SQLException e) { e.printStackTrace(); }
+      if(tabla!=null) try { tabla.close(); }
+      catch (SQLException e) {e.printStackTrace(); }
+      if(conn!=null) try { conn.close(); }
+      catch (SQLException e) { e.printStackTrace(); }
+    }
+  }
 }

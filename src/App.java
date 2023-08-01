@@ -21,7 +21,7 @@ public class App {
   public static void main(String[] args) throws Exception {
     Grafo grafo = new Grafo();
     grafo.cargarSucursales();
-    // System.out.println(grafo.getSucursales());
+    System.out.println(grafo.getSucursales());
     // Sucursal s = (Sucursal)grafo.getSucursales().get(1);
     grafo.cargarRutas();
     // System.out.println(grafo.getRutas());
@@ -38,17 +38,22 @@ public class App {
     // Producto p = gestorP.crearProducto("salamin", "un salamin", 200.0, 1200.0);
 
     // System.out.println(p.getId_producto());
-    ArrayList<ArrayList<Centro_Logistico>> caminos = grafo.obtenerCaminos(grafo.getSucursales().get(10), grafo.getSucursales().get(0));
-    for(ArrayList<Centro_Logistico> c : caminos) {
-      System.out.println("=========");
-      for(Centro_Logistico x : c){
-        System.out.print(x.getNombre() + " > ");
-      }
-      System.out.println("");
-    }
-    System.out.println(caminos.get(0));
-    // Gestor_Stock gestor = new Gestor_Stock();
+    // ArrayList<ArrayList<Centro_Logistico>> caminos = grafo.obtenerCaminos(grafo.getSucursales().get(10), grafo.getSucursales().get(0));
+    // for(ArrayList<Centro_Logistico> c : caminos) {
+    //   System.out.println("=========");
+    //   for(Centro_Logistico x : c){
+    //     System.out.print(x.getNombre() + " > ");
+    //   }
+    //   System.out.println("");
+    // }
+    // System.out.println(caminos.get(0));
+    Gestor_Stock gestor = new Gestor_Stock();
     // Stock stock = gestor.crearStock(10, 1.0, p, s);
     // gestor.eliminarStock(stock);
+    try {
+      System.out.println(gestor.buscarStock(grafo.getSucursales().get(10)));
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 }
