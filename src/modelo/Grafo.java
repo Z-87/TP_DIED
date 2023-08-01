@@ -446,4 +446,204 @@ public class Grafo {
         }
         return caminos;
     }
+
+    public Ruta encontrarRuta(Centro_Logistico origen, Centro_Logistico destino){
+
+        return this.getRutas().stream()
+                              .filter(a -> origen.equals(a.getSucursal_Origen()) && destino.equals(a.getSucursal_Destino()))
+                              .collect(Collectors.toList())
+                              .get(0);
+    }
+
+    public List<Ruta> getRutasAdyacentes(Centro_Logistico a){
+        return this.getRutas().stream()
+                              .filter(c -> a.equals(c.getSucursal_Origen()))
+                              .collect(Collectors.toList());
+    }
+
+    public ArrayList<ArrayList<Ruta>> obtenerRutas(Centro_Logistico origen, Centro_Logistico destino){
+        //Usamos recorrido en profundidad
+        boolean volver = true;
+        List<Centro_Logistico> adyacentes;
+        //ArrayList<ArrayList<Centro_Logistico>> caminos = new ArrayList<ArrayList<Centro_Logistico>>();
+        Stack<Centro_Logistico> paso = new Stack<>();
+
+        List<Ruta> rutasAdyacentes;
+        ArrayList<ArrayList<Ruta>> rutas = new ArrayList<ArrayList<Ruta>>();
+        Stack<Ruta> pasoR = new Stack<>();
+
+        Stack<Ruta> rutasPendientes = new Stack<Ruta>();
+
+        Stack<Centro_Logistico> pendientes = new Stack<Centro_Logistico>();
+        int nivel = 0, cont=0, camin=0;
+        ArrayList<Integer> arr = new ArrayList<Integer>();
+        pendientes.push(origen);
+        rutasPendientes.push(null);
+
+        while(!pendientes.isEmpty()){
+            if(volver){
+                Centro_Logistico actual = pendientes.pop();
+                Ruta rutaActual = rutasPendientes.pop();
+                adyacentes = this.getAdyacentes(actual);
+                rutasAdyacentes = this.getRutasAdyacentes(actual);
+                paso.push(actual);
+                pasoR.push(rutaActual);
+                arr.add(nivel, 0);
+                cont=0;
+                if(actual.equals(destino)){
+                    ArrayList<Ruta> ruta = new ArrayList<>();
+                    int r=0;
+                    for(Ruta f : pasoR){
+                        //System.out.print(f.getNombre()+" -> ");
+                        if(r>0)ruta.add(f);
+                        r++;
+                    }
+                    rutas.add(camin, ruta);
+                    //System.out.println("");
+                    paso.pop();
+                    pasoR.pop();
+                    //arr.set(nivel-1, 0);
+                    //nivel--;
+                    arr.set(nivel-1, arr.get(nivel-1)-1);
+                    volver = false;
+                    camin++;
+                }
+                else if(!adyacentes.isEmpty() && volver){
+                    for(Centro_Logistico v : adyacentes){
+                        pendientes.push(v);
+                        cont++;
+                        arr.set(nivel, cont);
+                    }
+                    for(Ruta b : rutasAdyacentes){
+                        rutasPendientes.push(b);
+                    }
+                    nivel++;
+                }
+
+            }
+            else{
+                if(arr.get(nivel-1) > 0){
+                    //System.out.print(" arrI: "+arr.get(nivel-1));
+                    //arr.set(nivel-1, (arr.get(nivel-1)-1));
+                    volver = true;
+                    //System.out.print(" arrF: "+arr.get(nivel-1));
+                }
+                else{
+                    paso.pop();
+                    pasoR.pop();
+                    //System.out.print(" arrI: "+arr.get(nivel-1));
+                    //arr.set(nivel-1, 0);
+                    //System.out.print(" arrF: "+arr.get(nivel-1));
+                    nivel--;
+                    arr.set(nivel-1, arr.get(nivel-1)-1);
+                    //if(arr.get(nivel-1) > 0){
+                    //    volver = true;
+                    //}
+                }
+            }
+        }
+        return rutas;
+    }
+
+    /*
+    public ArrayList<ArrayList<Ruta>> obtenerRutasV2(Centro_Logistico origen, Centro_Logistico destino){
+        //Usamos recorrido en profundidad
+        boolean volver = true;
+        //List<Centro_Logistico> adyacentes;
+        //ArrayList<ArrayList<Centro_Logistico>> caminos = new ArrayList<ArrayList<Centro_Logistico>>();
+        //Stack<Centro_Logistico> paso = new Stack<>();
+
+        List<Ruta> rutasAdyacentes;
+        ArrayList<ArrayList<Ruta>> rutas = new ArrayList<ArrayList<Ruta>>();
+        Stack<Ruta> pasoR = new Stack<>();
+
+        Stack<Ruta> rutasPendientes = new Stack<Ruta>();
+
+        //Stack<Centro_Logistico> pendientes = new Stack<Centro_Logistico>();
+        int nivel = 0, cont=0, camin=0;
+        ArrayList<Integer> arr = new ArrayList<Integer>();
+        //pendientes.push(origen);
+        //rutasPendientes.push(null);
+
+        rutasAdyacentes = this.getRutasAdyacentes(origen);
+        for(Ruta b : rutasAdyacentes){
+            rutasPendientes.push(b);
+            cont++;
+            arr.set(nivel, cont);
+        }
+        nivel++;
+        while(!rutasPendientes.isEmpty()){
+            if(volver){
+                //Centro_Logistico actual = pendientes.pop();
+                Ruta rutaActual = rutasPendientes.pop();
+                //adyacentes = this.getAdyacentes(actual);
+                Centro_Logistico actual = rutaActual.getSucursal_Destino();
+                rutasAdyacentes = this.getRutasAdyacentes(actual);
+                //paso.push(actual);
+                pasoR.push(rutaActual);
+                arr.add(nivel, 0);
+                cont=0;
+                if(actual.equals(destino)){
+                    ArrayList<Ruta> ruta = new ArrayList<>();
+                    for(Ruta f : pasoR){
+                        //System.out.print(f.getNombre()+" -> ");
+                        ruta.add(f);
+                    }
+                    rutas.add(camin, ruta);
+                    //System.out.println("");
+                    //paso.pop();
+                    pasoR.pop();
+                    //arr.set(nivel-1, 0);
+                    //nivel--;
+                    arr.set(nivel-1, arr.get(nivel-1)-1);
+                    volver = false;
+                    camin++;
+                }
+            }
+                
+            if(!rutasAdyacentes.isEmpty() && volver){
+                for(Ruta b : rutasAdyacentes){
+                    rutasPendientes.push(b);
+                    cont++;
+                    arr.set(nivel, cont);
+                }
+                nivel++;
+            }
+            else{
+                if(arr.get(nivel-1) > 0){
+                    //System.out.print(" arrI: "+arr.get(nivel-1));
+                    //arr.set(nivel-1, (arr.get(nivel-1)-1));
+                    volver = true;
+                    //System.out.print(" arrF: "+arr.get(nivel-1));
+                }
+                else{
+                    //paso.pop();
+                    pasoR.pop();
+                    //System.out.print(" arrI: "+arr.get(nivel-1));
+                    //arr.set(nivel-1, 0);
+                    //System.out.print(" arrF: "+arr.get(nivel-1));
+                    nivel--;
+                    arr.set(nivel-1, arr.get(nivel-1)-1);
+                    //if(arr.get(nivel-1) > 0){
+                    //    volver = true;
+                    //}
+                }
+            }
+        }
+        return rutas;
+    }
+    */
+
+
+    /*
+    public double flujoMaximo(Centro_Logistico c){
+        double maximoFlujo = 0;
+        for(Centro_Logistico a : (sucursales.stream().filter(d -> Puerto == d.getClass()).collect(Collectors.toList())))
+        for(ArrayList<Centro_Logistico> f : this.obtenerCaminos(a, c)){
+            for(int i=0; i < f.size()-1; i++){
+                
+            }
+        }
+    }
+    */
 }
