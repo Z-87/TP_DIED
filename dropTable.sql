@@ -1,9 +1,11 @@
 DROP TABLE tp.puerto;
 DROP TABLE tp.centro;
 DROP TABLE tp.sucursal;
-DROP TABLE tp.ruta;
 DROP TABLE tp.stock;
 DROP TABLE tp.cantidad;
 DROP TABLE tp.orden_provision;
+DROP TABLE tp.rutas_recorrido;
+DROP TABLE tp.recorrido;
+DROP TABLE tp.ruta;
 DROP TABLE tp.producto;
 DROP TABLE tp.centro_logistico;
