@@ -16,6 +16,22 @@ public class Grafo {
     ArrayList<Ruta> rutas = new ArrayList<>();
     ArrayList<Centro_Logistico> sucursales = new ArrayList<>();
 
+
+//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES
+//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES
+//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES
+//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES
+//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES
+//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES
+//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES
+//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES
+//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES
+//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES//GESTION_SUCURSALES
+
+    public ArrayList<Centro_Logistico> getSucursales() {
+      return sucursales;
+    }
+
     public void cargarSucursales(){
         Connection conn = null;
         PreparedStatement tabla = null;
@@ -78,103 +94,6 @@ public class Grafo {
             catch (SQLException e) { e.printStackTrace(); }
         }
 
-    }
-
-    public void cargarRutas() {
-        Connection conn = null;
-        PreparedStatement tabla = null;
-        ResultSet rs = null;
-        try {
-            Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("SELECT * FROM tp.Ruta");
-            rs = tabla.executeQuery();
-
-            while(rs.next()){
-                Ruta aux = new Ruta();
-                aux.setId_ruta(rs.getString("id_ruta"));
-                String aux1=rs.getString("sucursal_origen");
-                String aux2=rs.getString("sucursal_destino");
-                aux.setSucursal_Origen((this.sucursales.stream()
-                                                        .filter(a -> (aux1.equals(a.getId_logistico())))
-                                                        .collect(Collectors.toList())).get(0));
-                aux.setSucursal_Destino((this.sucursales.stream()
-                                                        .filter(a -> (aux2.equals(a.getId_logistico())))
-                                                        .collect(Collectors.toList())).get(0));
-                aux.setEstado(ESTADO_RUTA.valueOf(rs.getString("estado")));
-                aux.setCapacidad(rs.getDouble("capacidad"));
-                aux.setDuracion(rs.getInt("duracion"));
-                rutas.add(aux);
-            } //Captura las excepciones
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (EnumConstantNotPresentException e){
-            e.printStackTrace();
-        } 
-        finally { //Libera los recursos
-            if(rs!=null) try { rs.close(); }
-            catch (SQLException e) { e.printStackTrace(); }
-            if(tabla!=null) try { tabla.close(); }
-            catch (SQLException e) {e.printStackTrace(); }
-            if(conn!=null) try { conn.close(); }
-            catch (SQLException e) { e.printStackTrace(); }
-        }
-
-    }
-
-    public void cargarRuta(Ruta r){
-        Connection conn = null;
-        PreparedStatement tabla = null;
-        ResultSet rs = null;
-        if(!rutas.contains(r)){
-            try {
-            Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("INSERT INTO tp.Ruta(id_ruta, sucursal_origen, sucursal_destino, estado, capacidad, duracion) VALUES ('"+r.getId_ruta()+"','"+r.getSucursal_Origen().getId_logistico()+"','"+r.getSucursal_Destino().getId_logistico()+"','"+((r.getEstado()).toString())+"',"+(r.getCapacidad().toString())+","+r.getDuracion().toString()+")");
-            tabla.executeUpdate();
-
-            rutas.add(r);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            finally {
-                if(rs!=null) try { rs.close(); }
-                catch (SQLException e) { e.printStackTrace(); }
-                if(tabla!=null) try { tabla.close(); }
-                catch (SQLException e) {e.printStackTrace(); }
-                if(conn!=null) try { conn.close(); }
-                catch (SQLException e) { e.printStackTrace(); }
-            }
-        }
-    }
-
-    public void eliminarRuta(Ruta r){
-        Connection conn = null;
-        PreparedStatement tabla = null;
-        ResultSet rs = null;
-        try{
-            Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("DELETE FROM tp.Ruta WHERE id_ruta ='"+ r.getId_ruta()+"'");
-            tabla.executeUpdate();
-            this.rutas.remove(r);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        finally {
-            if(rs!=null) try { rs.close(); }
-            catch (SQLException e) { e.printStackTrace(); }
-            if(tabla!=null) try { tabla.close(); }
-            catch (SQLException e) {e.printStackTrace(); }
-            if(conn!=null) try { conn.close(); }
-            catch (SQLException e) { e.printStackTrace(); }
-        }
     }
 
     public void cargarSucursal(Sucursal a){
@@ -359,27 +278,11 @@ public class Grafo {
         }
     }
 
-    public ArrayList<Ruta> getRutas() {
-      return rutas;
-    }
-
-    public ArrayList<Centro_Logistico> getSucursales() {
-      return sucursales;
-    }
-
     private List<Centro_Logistico> getAdyacentes(Centro_Logistico a){
         return this.getRutas().stream()
                               .filter(c -> a.equals(c.getSucursal_Origen()))
                               .map(g -> g.getSucursal_Destino())
                               .collect(Collectors.toList());
-    }
-
-    public Centro_Logistico consultarScursal_Id(String id){
-        return this.sucursales.stream().filter(a -> id.equals(a.getId_logistico())).collect(Collectors.toList()).get(0);
-    }
-
-    public Centro_Logistico consultarScursal_Nombre(String nombre){
-        return this.sucursales.stream().filter(a -> nombre.equals(a.getNombre())).collect(Collectors.toList()).get(0);
     }
 
     public ArrayList<ArrayList<Centro_Logistico>> obtenerCaminos(Centro_Logistico origen, Centro_Logistico destino){
@@ -427,124 +330,18 @@ public class Grafo {
             }
             else{
                 if(arr.get(nivel-1) > 0){
-                    //System.out.print(" arrI: "+arr.get(nivel-1));
-                    //arr.set(nivel-1, (arr.get(nivel-1)-1));
                     volver = true;
-                    //System.out.print(" arrF: "+arr.get(nivel-1));
                 }
                 else{
                     paso.pop();
-                    //System.out.print(" arrI: "+arr.get(nivel-1));
-                    //arr.set(nivel-1, 0);
-                    //System.out.print(" arrF: "+arr.get(nivel-1));
                     nivel--;
                     arr.set(nivel-1, arr.get(nivel-1)-1);
-                    //if(arr.get(nivel-1) > 0){
-                    //    volver = true;
-                    //}
                 }
             }
         }
         return caminos;
     }
-    //REVISAR SI DEBE QUEDARSE
-    public Ruta encontrarRuta(Centro_Logistico origen, Centro_Logistico destino){
 
-        return this.getRutas().stream()
-                              .filter(a -> origen.equals(a.getSucursal_Origen()) && destino.equals(a.getSucursal_Destino()))
-                              .collect(Collectors.toList())
-                              .get(0);
-    }
-
-    private List<Ruta> getRutasAdyacentes(Centro_Logistico a){
-        return this.getRutas().stream()
-                              .filter(c -> a.equals(c.getSucursal_Origen()))
-                              .collect(Collectors.toList());
-    }
-
-    public ArrayList<ArrayList<Ruta>> obtenerRutas(Centro_Logistico origen, Centro_Logistico destino){
-        //Usamos recorrido en profundidad
-        boolean volver = true;
-        List<Centro_Logistico> adyacentes;
-        //ArrayList<ArrayList<Centro_Logistico>> caminos = new ArrayList<ArrayList<Centro_Logistico>>();
-        Stack<Centro_Logistico> paso = new Stack<>();
-
-        List<Ruta> rutasAdyacentes;
-        ArrayList<ArrayList<Ruta>> rutas = new ArrayList<ArrayList<Ruta>>();
-        Stack<Ruta> pasoR = new Stack<>();
-
-        Stack<Ruta> rutasPendientes = new Stack<Ruta>();
-
-        Stack<Centro_Logistico> pendientes = new Stack<Centro_Logistico>();
-        int nivel = 0, cont=0, camin=0;
-        ArrayList<Integer> arr = new ArrayList<Integer>();
-        pendientes.push(origen);
-        rutasPendientes.push(null);
-
-        while(!pendientes.isEmpty()){
-            if(volver){
-                Centro_Logistico actual = pendientes.pop();
-                Ruta rutaActual = rutasPendientes.pop();
-                adyacentes = this.getAdyacentes(actual);
-                rutasAdyacentes = this.getRutasAdyacentes(actual);
-                paso.push(actual);
-                pasoR.push(rutaActual);
-                arr.add(nivel, 0);
-                cont=0;
-                if(actual.equals(destino)){
-                    ArrayList<Ruta> ruta = new ArrayList<>();
-                    int r=0;
-                    for(Ruta f : pasoR){
-                        //System.out.print(f.getNombre()+" -> ");
-                        if(r>0)ruta.add(f);
-                        r++;
-                    }
-                    rutas.add(camin, ruta);
-                    //System.out.println("");
-                    paso.pop();
-                    pasoR.pop();
-                    //arr.set(nivel-1, 0);
-                    //nivel--;
-                    arr.set(nivel-1, arr.get(nivel-1)-1);
-                    volver = false;
-                    camin++;
-                }
-                else if(!adyacentes.isEmpty() && volver){
-                    for(Centro_Logistico v : adyacentes){
-                        pendientes.push(v);
-                        cont++;
-                        arr.set(nivel, cont);
-                    }
-                    for(Ruta b : rutasAdyacentes){
-                        rutasPendientes.push(b);
-                    }
-                    nivel++;
-                }
-
-            }
-            else{
-                if(arr.get(nivel-1) > 0){
-                    //System.out.print(" arrI: "+arr.get(nivel-1));
-                    //arr.set(nivel-1, (arr.get(nivel-1)-1));
-                    volver = true;
-                    //System.out.print(" arrF: "+arr.get(nivel-1));
-                }
-                else{
-                    paso.pop();
-                    pasoR.pop();
-                    //System.out.print(" arrI: "+arr.get(nivel-1));
-                    //arr.set(nivel-1, 0);
-                    //System.out.print(" arrF: "+arr.get(nivel-1));
-                    nivel--;
-                    arr.set(nivel-1, arr.get(nivel-1)-1);
-                    //if(arr.get(nivel-1) > 0){
-                    //    volver = true;
-                    //}
-                }
-            }
-        }
-        return rutas;
-    }
     //Revisar si se queda
     private List<Centro_Logistico> getIncidentes(Centro_Logistico a){
         return this.getRutas().stream()
@@ -552,7 +349,6 @@ public class Grafo {
                               .map(d -> d.getSucursal_Destino())
                               .collect(Collectors.toList());
     }
-
 
     public double flujoMaximo(Centro_Logistico c){
         double maximoFlujo = 0;
@@ -568,6 +364,7 @@ public class Grafo {
         }
         return maximoFlujo;
     }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///                                                                                                                             ///
 ///     Codigo obtenido con ayuda de chatGPT y adaptado por nosotros para el calculo del Page Rank de todas las sucursales      ///
@@ -674,6 +471,285 @@ public class Grafo {
             if(conn!=null) try { conn.close(); }
             catch (SQLException e) { e.printStackTrace(); }
         }
+    }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///     Fin de la adaptacion                                                                                                    ///
+///                                                                                                                             ///
+///                                                                                                                             ///
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Centro_Logistico consultarScursal_Id(String id){
+        return this.sucursales.stream().filter(a -> id.equals(a.getId_logistico())).collect(Collectors.toList()).get(0);
+    }
+
+    public List<Centro_Logistico> consultarScursales_Nombre(String nombre){
+        return this.sucursales.stream().filter(a -> nombre.equals(a.getNombre())).collect(Collectors.toList());
+    }
+
+    public List<Centro_Logistico> consultarScursales_HorarioApertura(String h){
+        return this.sucursales.stream().filter(a -> h.equals(a.getHorario_apertura())).collect(Collectors.toList());
+    }
+
+    public List<Centro_Logistico> consultarScursales_HorarioCierre(String h){
+        return this.sucursales.stream().filter(a -> h.equals(a.getHorario_cierre())).collect(Collectors.toList());
+    }
+
+    public List<Centro_Logistico> consultarScursales_pageRank(double pr){
+        return this.sucursales.stream().filter(a -> a.getPageRank() == pr).collect(Collectors.toList());
+    }
+
+    public List<Centro_Logistico> consultarScursales_Operativas(){
+        return this.sucursales.stream().filter(a -> ESTADO_SUCURSAL.OPERATIVA.equals(a.getEstado())).collect(Collectors.toList());
+    }
+
+    public List<Centro_Logistico> consultarScursales_NoOperativas(){
+        return this.sucursales.stream().filter(a -> ESTADO_SUCURSAL.NO_OPERATIVA.equals(a.getEstado())).collect(Collectors.toList());
+    }
+
+//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS
+//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS
+//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS
+//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS
+//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS
+//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS
+//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS
+//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS
+//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS
+//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS
+
+    public ArrayList<Ruta> getRutas() {
+      return rutas;
+    }
+
+    public void cargarRutas() {
+        Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
+            tabla = conn.prepareStatement("SELECT * FROM tp.Ruta");
+            rs = tabla.executeQuery();
+
+            while(rs.next()){
+                Ruta aux = new Ruta();
+                aux.setId_ruta(rs.getString("id_ruta"));
+                String aux1=rs.getString("sucursal_origen");
+                String aux2=rs.getString("sucursal_destino");
+                aux.setSucursal_Origen((this.sucursales.stream()
+                                                        .filter(a -> (aux1.equals(a.getId_logistico())))
+                                                        .collect(Collectors.toList())).get(0));
+                aux.setSucursal_Destino((this.sucursales.stream()
+                                                        .filter(a -> (aux2.equals(a.getId_logistico())))
+                                                        .collect(Collectors.toList())).get(0));
+                aux.setEstado(ESTADO_RUTA.valueOf(rs.getString("estado")));
+                aux.setCapacidad(rs.getDouble("capacidad"));
+                aux.setDuracion(rs.getInt("duracion"));
+                rutas.add(aux);
+            } //Captura las excepciones
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (EnumConstantNotPresentException e){
+            e.printStackTrace();
+        } 
+        finally { //Libera los recursos
+            if(rs!=null) try { rs.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+            if(tabla!=null) try { tabla.close(); }
+            catch (SQLException e) {e.printStackTrace(); }
+            if(conn!=null) try { conn.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+        }
+
+    }
+
+    public void cargarRuta(Ruta r){
+        Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
+        if(!rutas.contains(r)){
+            try {
+            Class.forName("org.postgresql.Driver");
+            conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
+            tabla = conn.prepareStatement("INSERT INTO tp.Ruta(id_ruta, sucursal_origen, sucursal_destino, estado, capacidad, duracion) VALUES ('"+r.getId_ruta()+"','"+r.getSucursal_Origen().getId_logistico()+"','"+r.getSucursal_Destino().getId_logistico()+"','"+((r.getEstado()).toString())+"',"+(r.getCapacidad().toString())+","+r.getDuracion().toString()+")");
+            tabla.executeUpdate();
+
+            rutas.add(r);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            finally {
+                if(rs!=null) try { rs.close(); }
+                catch (SQLException e) { e.printStackTrace(); }
+                if(tabla!=null) try { tabla.close(); }
+                catch (SQLException e) {e.printStackTrace(); }
+                if(conn!=null) try { conn.close(); }
+                catch (SQLException e) { e.printStackTrace(); }
+            }
+        }
+    }
+
+    public void eliminarRuta(Ruta r){
+        Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
+        try{
+            Class.forName("org.postgresql.Driver");
+            conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
+            tabla = conn.prepareStatement("DELETE FROM tp.Ruta WHERE id_ruta ='"+ r.getId_ruta()+"'");
+            tabla.executeUpdate();
+            this.rutas.remove(r);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if(rs!=null) try { rs.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+            if(tabla!=null) try { tabla.close(); }
+            catch (SQLException e) {e.printStackTrace(); }
+            if(conn!=null) try { conn.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+
+    public Ruta consultarRuta_Id(String id){
+        return this.rutas.stream().filter(a -> id.equals(a.getId_ruta())).collect(Collectors.toList()).get(0);
+    }
+
+    public List<Ruta> consultarRutas_sucursalOrigen(Centro_Logistico s){
+        return this.rutas.stream().filter(a -> s.equals(a.getSucursal_Origen())).collect(Collectors.toList());
+    }
+
+    public List<Ruta> consultarRutas_sucursalDestino(Centro_Logistico s){
+        return this.rutas.stream().filter(a -> s.equals(a.getSucursal_Destino())).collect(Collectors.toList());
+    }
+
+    public List<Ruta> consultarRutas_capacidadExacta(double cap){
+        return this.rutas.stream().filter(a -> a.getCapacidad() == cap).collect(Collectors.toList());
+    }
+
+    public List<Ruta> consultarRutas_capacidadMayorIgual(double cap){
+        return this.rutas.stream().filter(a -> a.getCapacidad() >= cap).collect(Collectors.toList());
+    }
+
+    public List<Ruta> consultarRutas_capacidadMenor(double cap){
+        return this.rutas.stream().filter(a -> a.getCapacidad() < cap).collect(Collectors.toList());
+    }
+
+    public List<Ruta> consultarRutas_duracionExacta(double dur){
+        return this.rutas.stream().filter(a -> a.getDuracion() == dur).collect(Collectors.toList());
+    }
+
+    public List<Ruta> consultarRutas_duracionMayorIgual(double dur){
+        return this.rutas.stream().filter(a -> a.getDuracion() >= dur).collect(Collectors.toList());
+    }
+
+    public List<Ruta> consultarRutas_duracionMenor(double dur){
+        return this.rutas.stream().filter(a -> a.getDuracion() < dur).collect(Collectors.toList());
+    }
+
+    public List<Ruta> consultarRutas_Operativas(){
+        return this.rutas.stream().filter(a -> ESTADO_RUTA.OPERATIVA.equals(a.getEstado())).collect(Collectors.toList());
+    }
+
+    public List<Ruta> consultarRutas_NoOperativas(){
+        return this.rutas.stream().filter(a -> ESTADO_RUTA.NO_OPERATIVA.equals(a.getEstado())).collect(Collectors.toList());
+    }
+
+    //REVISAR SI DEBE QUEDARSE
+    public Ruta encontrarRuta(Centro_Logistico origen, Centro_Logistico destino){
+        return this.getRutas().stream()
+                              .filter(a -> origen.equals(a.getSucursal_Origen()) && destino.equals(a.getSucursal_Destino()))
+                              .collect(Collectors.toList())
+                              .get(0);
+    }
+
+    private List<Ruta> getRutasAdyacentes(Centro_Logistico a){
+        return this.getRutas().stream()
+                              .filter(c -> a.equals(c.getSucursal_Origen()))
+                              .collect(Collectors.toList());
+    }
+
+    public ArrayList<ArrayList<Ruta>> obtenerRutas(Centro_Logistico origen, Centro_Logistico destino){
+        //Usamos recorrido en profundidad
+        boolean volver = true;
+        List<Centro_Logistico> adyacentes;
+        //ArrayList<ArrayList<Centro_Logistico>> caminos = new ArrayList<ArrayList<Centro_Logistico>>();
+        Stack<Centro_Logistico> paso = new Stack<>();
+
+        List<Ruta> rutasAdyacentes;
+        ArrayList<ArrayList<Ruta>> rutas = new ArrayList<ArrayList<Ruta>>();
+        Stack<Ruta> pasoR = new Stack<>();
+
+        Stack<Ruta> rutasPendientes = new Stack<Ruta>();
+
+        Stack<Centro_Logistico> pendientes = new Stack<Centro_Logistico>();
+        int nivel = 0, cont=0, camin=0;
+        ArrayList<Integer> arr = new ArrayList<Integer>();
+        pendientes.push(origen);
+        rutasPendientes.push(null);
+
+        while(!pendientes.isEmpty()){
+            if(volver){
+                Centro_Logistico actual = pendientes.pop();
+                Ruta rutaActual = rutasPendientes.pop();
+                adyacentes = this.getAdyacentes(actual);
+                rutasAdyacentes = this.getRutasAdyacentes(actual);
+                paso.push(actual);
+                pasoR.push(rutaActual);
+                arr.add(nivel, 0);
+                cont=0;
+                if(actual.equals(destino)){
+                    ArrayList<Ruta> ruta = new ArrayList<>();
+                    int r=0;
+                    for(Ruta f : pasoR){
+                        //System.out.print(f.getNombre()+" -> ");
+                        if(r>0)ruta.add(f);
+                        r++;
+                    }
+                    rutas.add(camin, ruta);
+                    //System.out.println("");
+                    paso.pop();
+                    pasoR.pop();
+                    //arr.set(nivel-1, 0);
+                    //nivel--;
+                    arr.set(nivel-1, arr.get(nivel-1)-1);
+                    volver = false;
+                    camin++;
+                }
+                else if(!adyacentes.isEmpty() && volver){
+                    for(Centro_Logistico v : adyacentes){
+                        pendientes.push(v);
+                        cont++;
+                        arr.set(nivel, cont);
+                    }
+                    for(Ruta b : rutasAdyacentes){
+                        rutasPendientes.push(b);
+                    }
+                    nivel++;
+                }
+
+            }
+            else{
+                if(arr.get(nivel-1) > 0){
+                    volver = true;
+                }
+                else{
+                    paso.pop();
+                    pasoR.pop();
+                    nivel--;
+                    arr.set(nivel-1, arr.get(nivel-1)-1);
+                }
+            }
+        }
+        return rutas;
     }
 
 }

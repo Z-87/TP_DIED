@@ -3,7 +3,6 @@ package modelo;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public abstract class Centro_Logistico {
@@ -53,37 +52,48 @@ public abstract class Centro_Logistico {
     
     public void setNoOperativa(){
         this.estado = ESTADO_SUCURSAL.NO_OPERATIVA;
-        Connection conn = null;
-        try {
-            Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
-            PreparedStatement tabla;
-            ResultSet rs;
-            tabla = conn.prepareStatement("UPDATE tp.Centro_Logistico SET estado='NO_OPERATIVA' WHERE id_logistico="+this.id_logistico);
-            rs = tabla.executeQuery();
-        } catch(ClassNotFoundException e){
-            e.printStackTrace();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
+        this.cargarDatosSucursal("estado", "'NO_OPERATIVA'");
     }
 
     public void setOperativa(){
         this.estado = ESTADO_SUCURSAL.OPERATIVA;
+        this.cargarDatosSucursal("estado", "'OPERATIVA'");
+    }
+
+    public void cargarNombre(String newNombre){
+        this.setNombre(newNombre);
+        this.cargarDatosSucursal("nombre", "'"+newNombre+"'");
+    }
+
+    public void cargarHorario_Apertura(String newHorario){
+        this.setHorario_apertura(newHorario);
+        this.cargarDatosSucursal("horario_apertura", "'"+newHorario+"'");
+    }
+
+    public void cargarHorario_Cierre(String newHorario){
+        this.setHorario_cierre(newHorario);
+        this.cargarDatosSucursal("horario_cierre", "'"+newHorario+"'");
+    }
+
+    public void cargarPageRank(Double pr){
+        this.setPageRank(pr);
+        this.cargarDatosSucursal("pageRank", pr.toString());
+    }
+
+    protected void cargarDatosSucursal(String campo, String newValor){
         Connection conn = null;
         try {
             Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection("localhost", "tpadmin", "tpadmindied");
+            conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
             PreparedStatement tabla;
-            ResultSet rs;
-            tabla = conn.prepareStatement("UPDATE tp.Centro_Logistico SET estado='OPERATIVA' WHERE id_logistico="+this.id_logistico);
-            rs = tabla.executeQuery();
+            System.out.println(newValor);
+            tabla = conn.prepareStatement("UPDATE tp.Centro_Logistico SET "+campo+"="+newValor+" WHERE id_logistico='"+this.id_logistico+"'");
+            tabla.executeUpdate();
         } catch(ClassNotFoundException e){
             e.printStackTrace();
         } catch(SQLException e){
             e.printStackTrace();
         }
     }
-
     
 }
