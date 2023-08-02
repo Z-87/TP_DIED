@@ -14,6 +14,7 @@ CREATE TABLE tp.Centro_Logistico (
     estado character varying(20),
     horario_apertura character varying(20),
     horario_cierre character varying(20),
+    pageRank real,
     CONSTRAINT PK_Centro_Logistico PRIMARY KEY (id_logistico)
 );
 
