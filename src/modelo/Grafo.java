@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -366,7 +367,7 @@ public class Grafo {
       return sucursales;
     }
 
-    public List<Centro_Logistico> getAdyacentes(Centro_Logistico a){
+    private List<Centro_Logistico> getAdyacentes(Centro_Logistico a){
         return this.getRutas().stream()
                               .filter(c -> a.equals(c.getSucursal_Origen()))
                               .map(g -> g.getSucursal_Destino())
@@ -446,7 +447,7 @@ public class Grafo {
         }
         return caminos;
     }
-
+    //REVISAR SI DEBE QUEDARSE
     public Ruta encontrarRuta(Centro_Logistico origen, Centro_Logistico destino){
 
         return this.getRutas().stream()
@@ -455,7 +456,7 @@ public class Grafo {
                               .get(0);
     }
 
-    public List<Ruta> getRutasAdyacentes(Centro_Logistico a){
+    private List<Ruta> getRutasAdyacentes(Centro_Logistico a){
         return this.getRutas().stream()
                               .filter(c -> a.equals(c.getSucursal_Origen()))
                               .collect(Collectors.toList());
@@ -544,106 +545,136 @@ public class Grafo {
         }
         return rutas;
     }
-
-    /*
-    public ArrayList<ArrayList<Ruta>> obtenerRutasV2(Centro_Logistico origen, Centro_Logistico destino){
-        //Usamos recorrido en profundidad
-        boolean volver = true;
-        //List<Centro_Logistico> adyacentes;
-        //ArrayList<ArrayList<Centro_Logistico>> caminos = new ArrayList<ArrayList<Centro_Logistico>>();
-        //Stack<Centro_Logistico> paso = new Stack<>();
-
-        List<Ruta> rutasAdyacentes;
-        ArrayList<ArrayList<Ruta>> rutas = new ArrayList<ArrayList<Ruta>>();
-        Stack<Ruta> pasoR = new Stack<>();
-
-        Stack<Ruta> rutasPendientes = new Stack<Ruta>();
-
-        //Stack<Centro_Logistico> pendientes = new Stack<Centro_Logistico>();
-        int nivel = 0, cont=0, camin=0;
-        ArrayList<Integer> arr = new ArrayList<Integer>();
-        //pendientes.push(origen);
-        //rutasPendientes.push(null);
-
-        rutasAdyacentes = this.getRutasAdyacentes(origen);
-        for(Ruta b : rutasAdyacentes){
-            rutasPendientes.push(b);
-            cont++;
-            arr.set(nivel, cont);
-        }
-        nivel++;
-        while(!rutasPendientes.isEmpty()){
-            if(volver){
-                //Centro_Logistico actual = pendientes.pop();
-                Ruta rutaActual = rutasPendientes.pop();
-                //adyacentes = this.getAdyacentes(actual);
-                Centro_Logistico actual = rutaActual.getSucursal_Destino();
-                rutasAdyacentes = this.getRutasAdyacentes(actual);
-                //paso.push(actual);
-                pasoR.push(rutaActual);
-                arr.add(nivel, 0);
-                cont=0;
-                if(actual.equals(destino)){
-                    ArrayList<Ruta> ruta = new ArrayList<>();
-                    for(Ruta f : pasoR){
-                        //System.out.print(f.getNombre()+" -> ");
-                        ruta.add(f);
-                    }
-                    rutas.add(camin, ruta);
-                    //System.out.println("");
-                    //paso.pop();
-                    pasoR.pop();
-                    //arr.set(nivel-1, 0);
-                    //nivel--;
-                    arr.set(nivel-1, arr.get(nivel-1)-1);
-                    volver = false;
-                    camin++;
-                }
-            }
-                
-            if(!rutasAdyacentes.isEmpty() && volver){
-                for(Ruta b : rutasAdyacentes){
-                    rutasPendientes.push(b);
-                    cont++;
-                    arr.set(nivel, cont);
-                }
-                nivel++;
-            }
-            else{
-                if(arr.get(nivel-1) > 0){
-                    //System.out.print(" arrI: "+arr.get(nivel-1));
-                    //arr.set(nivel-1, (arr.get(nivel-1)-1));
-                    volver = true;
-                    //System.out.print(" arrF: "+arr.get(nivel-1));
-                }
-                else{
-                    //paso.pop();
-                    pasoR.pop();
-                    //System.out.print(" arrI: "+arr.get(nivel-1));
-                    //arr.set(nivel-1, 0);
-                    //System.out.print(" arrF: "+arr.get(nivel-1));
-                    nivel--;
-                    arr.set(nivel-1, arr.get(nivel-1)-1);
-                    //if(arr.get(nivel-1) > 0){
-                    //    volver = true;
-                    //}
-                }
-            }
-        }
-        return rutas;
+    //Revisar si se queda
+    private List<Centro_Logistico> getIncidentes(Centro_Logistico a){
+        return this.getRutas().stream()
+                              .filter(c -> a.equals(c.getSucursal_Destino()))
+                              .map(d -> d.getSucursal_Destino())
+                              .collect(Collectors.toList());
     }
-    */
 
 
-    /*
     public double flujoMaximo(Centro_Logistico c){
         double maximoFlujo = 0;
-        for(Centro_Logistico a : (sucursales.stream().filter(d -> Puerto == d.getClass()).collect(Collectors.toList())))
-        for(ArrayList<Centro_Logistico> f : this.obtenerCaminos(a, c)){
-            for(int i=0; i < f.size()-1; i++){
-                
+        for(Centro_Logistico a : (sucursales.stream().filter(d -> d instanceof Puerto).collect(Collectors.toList())))
+            for(ArrayList<Ruta> f : this.obtenerRutas(a, c)){
+                maximoFlujo = f.get(0).getCapacidad();
+                for(int i=0; i < f.size()-1; i++){
+                    double cap = f.get(i).getCapacidad();
+                    if(cap < maximoFlujo){
+                        maximoFlujo = cap;
+                    }
+                }
+        }
+        return maximoFlujo;
+    }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///                                                                                                                             ///
+///     Codigo obtenido con ayuda de chatGPT y adaptado por nosotros para el calculo del Page Rank de todas las sucursales      ///
+///                                                                                                                             ///
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private double[] pageRank(int[][] Mrelaciones, double dampingFactor, double tolerancia, int maxIterations, int tamL) {
+        //int num7Pages = Mrelaciones.length;
+        double[] pageRank = new double[tamL];
+        Arrays.fill(pageRank, 1.0 / tamL);
+
+        for (int iteration = 0; iteration < maxIterations; iteration++) {
+            double[] newPageRank = new double[tamL];
+            double teleportation = (1 - dampingFactor) / tamL;
+
+            for (int i = 0; i < tamL; i++) {
+                for (int j = 0; j < tamL; j++) {
+                    if (Mrelaciones[j][i] == 1) {
+                        newPageRank[i] += pageRank[j] / countOutboundLinks(Mrelaciones, j);
+                    }
+                }
+                newPageRank[i] = dampingFactor * newPageRank[i] + teleportation;
+            }
+
+            if (isConverged(pageRank, newPageRank, tolerancia)) {
+                break;
+            }
+
+            pageRank = newPageRank;
+        }
+
+        return pageRank;
+    }
+
+    private static int countOutboundLinks(int[][] Mrelaciones, int page) {
+        int count = 0;
+        for (int i = 0; i < Mrelaciones[page].length; i++) {
+            count += Mrelaciones[page][i];
+        }
+        return count;
+    }
+
+    private static boolean isConverged(double[] pageRank, double[] newPageRank, double tolerancia) {
+        for (int i = 0; i < pageRank.length; i++) {
+            if (Math.abs(pageRank[i] - newPageRank[i]) > tolerancia) {
+                return false;
             }
         }
+        return true;
     }
-    */
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///     Fin del codigo obtenido con ayuda de chatGPT                                                                            ///
+///                                                                                                                             ///
+///     Inicio de la adaptacion                                                                                                 ///
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private int dondeEsta(Centro_Logistico e){
+        int cont = 0;
+        for(Centro_Logistico g : this.getSucursales()){
+            if(g.equals(e)){
+                break;
+            }
+            cont++;
+        }
+        return cont;
+    }
+
+    public void calcularPageRank(){
+        Connection conn = null;
+        PreparedStatement tabla = null;
+        ResultSet rs = null;
+        int arr[][] = new int[100][100];
+        for(Ruta r : this.getRutas()){
+            int o = this.dondeEsta(r.getSucursal_Origen());
+            int d = this.dondeEsta(r.getSucursal_Destino());
+            arr[o][d] = 1;
+        }
+        int tamL = this.getSucursales().size(), cont=0;
+        System.out.println(" "+tamL+" ");
+        double pr[] = this.pageRank(arr, 0.15, 0.0001, 100, tamL);
+        try{
+            Class.forName("org.postgresql.Driver");
+            conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
+            for(Centro_Logistico c : this.getSucursales()){
+                //System.out.print(" "+c.getNombre()+" -> ");
+                //System.out.print(" "+pr[cont]+" -> ");
+                c.setPageRank(pr[cont]);
+                tabla = conn.prepareStatement("UPDATE tp.Centro_Logistico SET pageRank = "+pr[cont]+" WHERE id_logistico = '"+c.getId_logistico()+"'");
+                tabla.executeUpdate();
+                tabla.close();
+                cont++;
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if(rs!=null) try { rs.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+            if(tabla!=null) try { tabla.close(); }
+            catch (SQLException e) {e.printStackTrace(); }
+            if(conn!=null) try { conn.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+
 }
+

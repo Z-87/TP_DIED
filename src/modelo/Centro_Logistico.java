@@ -12,6 +12,7 @@ public abstract class Centro_Logistico {
     protected ESTADO_SUCURSAL estado;
     protected String horario_apertura;
     protected String horario_cierre;
+    protected double pageRank;
 
     public String getId_logistico() {
         return id_logistico;
@@ -20,28 +21,34 @@ public abstract class Centro_Logistico {
         this.id_logistico = id_logistico;
     }
     public String getNombre() {
-        return nombre;
+        return this.nombre;
     }
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
     public ESTADO_SUCURSAL getEstado() {
-        return estado;
+        return this.estado;
     }
     public void setEstado(ESTADO_SUCURSAL estado) {
         this.estado = estado;
     }
     public String getHorario_apertura() {
-        return horario_apertura;
+        return this.horario_apertura;
     }
     public void setHorario_apertura(String horario_apertura) {
         this.horario_apertura = horario_apertura;
     }
     public String getHorario_cierre() {
-        return horario_cierre;
+        return this.horario_cierre;
     }
     public void setHorario_cierre(String horario_cierre) {
         this.horario_cierre = horario_cierre;
+    }
+    public double getPageRank() {
+        return this.pageRank;
+    }
+    public void setPageRank(double pr) {
+        this.pageRank = pr;
     }
     
     public void setNoOperativa(){
