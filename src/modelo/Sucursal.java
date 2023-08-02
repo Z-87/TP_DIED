@@ -10,7 +10,7 @@ public class Sucursal extends Centro_Logistico{
         this.horario_cierre = null;
     }
 
-    public Sucursal(String id_logistico, String nombre, ESTADO_SUCURSAL estado, String horario_apertura, String horario_cierre){
+    public Sucursal(Integer id_logistico, String nombre, ESTADO_SUCURSAL estado, String horario_apertura, String horario_cierre){
         this.id_logistico = id_logistico;
         this.nombre = nombre;
         this.estado = estado;

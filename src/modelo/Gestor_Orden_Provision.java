@@ -11,44 +11,39 @@ import java.util.Date;
 import exceptions.OrdenesNoEncontradasException;
 
 public class Gestor_Orden_Provision {
-  public Orden_Provision crearOrden_Provision(Date fechaOrden, Centro_Logistico sucursalDestino, Double tiempoEsperado, ArrayList<Cantidad> productos) {
-    Orden_Provision orden = null;
+  private ArrayList<Orden_Provision> ordenes = new ArrayList<>();
+
+  public Orden_Provision crearOrden_Provision(Orden_Provision orden) {
     Connection conn = null;
     PreparedStatement tabla = null;
     ResultSet rs = null;
     try {
       Class.forName("org.postgresql.Driver");
       conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-      rs = conn.prepareStatement("SELECT id_orden FROM tp.orden_provision ORDER BY id_orden DESC LIMIT 1").executeQuery();
-      rs.next();
-      String id_siguiente = Integer.toString(Integer.parseInt(rs.getString("id_orden")) + 1);
       tabla = conn.prepareStatement(
-        "INSERT INTO tp.orden_provision(id_orden, fecha_orden, tiempo_esperado, estado, sucursal_origen, sucursal_destino)" + 
-        "VALUES ('" + 
-          id_siguiente + "','" + 
-          fechaOrden + "','" + 
-          tiempoEsperado + "','" +
+        "INSERT INTO tp.orden_provision(fecha_orden, tiempo_esperado, estado, sucursal_origen, sucursal_destino)" + 
+        "VALUES ('" +
+          orden.getFechaDeOrden() + "','" + 
+          orden.getTiempoEsperadoHoras() + "','" +
           "EN_PROCESO'," +
           "null,'" + 
-          sucursalDestino.getId_logistico() + 
-        "' )"
+          orden.getSucursalDestino().getId_logistico() + 
+        "' )" +
+        "RETURNING id_orden"
       );
-      tabla.executeUpdate();
-      
-      rs.close();
+      rs = tabla.executeQuery();
+      rs.next();
+
+      orden.setId_orden(rs.getInt("id_orden"));
       tabla.close();
 
       //INSERTs de Cantidad.
-      rs = conn.prepareStatement("SELECT id_cantidad FROM tp.cantidad ORDER BY id_cantidad DESC LIMIT 1").executeQuery();
-      rs.next();
-      String id_next = Integer.toString(Integer.parseInt(rs.getString("id_cantidad")) + 1);
       String sql = "INSERT INTO tp.cantidad(id_cantidad, id_producto, id_orden, cantidad_unit, cantidad_kg) VALUES";
-      
-      for(Cantidad c : productos) {
+
+      for(Cantidad c : orden.getProductos()) {
         sql += "('" + 
-          id_next + "','" + 
           c.getProducto().getId_producto() + "','" + 
-          id_siguiente + "'," +
+          orden.getId() + "'," +
           c.getCantidadUnidades() + "," +
           c.getCantidadKg() +
         "' ), ";
@@ -57,7 +52,7 @@ public class Gestor_Orden_Provision {
       tabla = conn.prepareStatement(sql.substring(0, sql.length() - 2) + ";");
       tabla.executeUpdate();
 
-      orden = new Orden_Provision(id_siguiente, fechaOrden, sucursalDestino, null, tiempoEsperado, ESTADO_ORDEN.EN_PROCESO, productos, null);
+      ordenes.add(orden);
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (SQLException e) {
@@ -87,13 +82,13 @@ public class Gestor_Orden_Provision {
       tabla = conn.prepareStatement(
         "SELECT * FROM tp.orden_provision O" + 
         "INNER JOIN tp.centro_logistico Destino ON Destino.id_logistico = sucursal_destino" +
-        "INNER JOIN tp.centro DestinoC ON DestinoC.id_centro = Destino.id_logistico" +
-        "INNER JOIN tp.puerto DestinoP ON DestinoP.id_puerto = Destino.id_logistico" +
-        "INNER JOIN tp.sucursal DestinoS ON DestinoS.id_sucursal = Destino.id_logistico" +
+        "LEFT JOIN tp.centro DestinoC ON DestinoC.id_centro = Destino.id_logistico" +
+        "LEFT JOIN tp.puerto DestinoP ON DestinoP.id_puerto = Destino.id_logistico" +
+        "LEFT JOIN tp.sucursal DestinoS ON DestinoS.id_sucursal = Destino.id_logistico" +
         "INNER JOIN tp.centro_logistico Origen ON Origen.id_logistico = sucursal_origen" +
-        "INNER JOIN tp.centro OrigenC ON OrigenC.id_centro = Origen.id_logistico" +
-        "INNER JOIN tp.puerto OrigenP ON OrigenP.id_puerto = Origen.id_logistico" +
-        "INNER JOIN tp.sucursal OrigenS ON OrigenS.id_sucursal = Origen.id_logistico"
+        "LEFT JOIN tp.centro OrigenC ON OrigenC.id_centro = Origen.id_logistico" +
+        "LEFT JOIN tp.puerto OrigenP ON OrigenP.id_puerto = Origen.id_logistico" +
+        "LEFT JOIN tp.sucursal OrigenS ON OrigenS.id_sucursal = Origen.id_logistico"
       );
       rs = tabla.executeQuery();
 
@@ -164,7 +159,14 @@ public class Gestor_Orden_Provision {
 
   public ArrayList<Centro_Logistico> listarPosiblesOrigenes(Orden_Provision orden) {
     Gestor_Stock gestor_stock = new Gestor_Stock();
-    gestor_stock.
+    ArrayList<Producto> listaProductos = (ArrayList<Producto>)orden.getProductos().stream().map(c -> c.getProducto()).toList();
+    try {
+      ArrayList<Stock> stocks = gestor_stock.buscarStock(listaProductos);
+
+    } catch (Exception e) {
+      // TODO: handle exception
+    }
+    
   }
 
 }

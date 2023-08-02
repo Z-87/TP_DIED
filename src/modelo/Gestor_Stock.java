@@ -256,7 +256,7 @@ public class Gestor_Stock {
           sucursal
         ));
       } 
-      if(resultado.get(0) == null){
+      if(resultado.size() < 1){
         throw new StockNoEncontradoException("Ninguna sucursal cuenta con " + producto.getNombre() + " en stock.");
       }
 
@@ -289,16 +289,17 @@ public class Gestor_Stock {
       conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
       
       String id_productos = String.join("','", productos.stream().map(p -> (p.getId_producto())).toList());
-      String sql = "SELECT * FROM tp.stock " + 
-          "INNER JOIN tp.centro_logistico USING(id_logistico) " +
-          "INNER JOIN tp.centro ON id_centro = id_logistico " +
-          "INNER JOIN tp.puerto ON id_puerto = id_logistico " +
-          "INNER JOIN tp.sucursal ON id_sucursal = id_logistico " +
-          "INNER JOIN tp.producto P USING(id_producto) " +
-        "WHERE id_producto IN ('" + id_productos + "') " +
-        "GROUP BY id_logistico HAVING COUNT(DISTINCT id_producto) = " + productos.size();
       tabla = conn.prepareStatement(
-        sql
+        "SELECT " +
+          "id_logistico, id_centro, id_puerto, id_sucursal, C.nombre cnombre, C.estado cestado, C.horario_apertura chorario_apertura, C.horario_cierre chorario_cierre," +
+          "id_producto, P.nombre pnombre, P.descripcion pdescripcion, P.precio_unit pprecio_unit, P.precio_kg pprecio_kg, id_stock, cantidad_unit, cantidad_kg " + 
+        "FROM tp.stock " + 
+          "INNER JOIN tp.centro_logistico C USING(id_logistico) " +
+          "LEFT JOIN tp.centro ON id_centro = id_logistico " +
+          "LEFT JOIN tp.puerto ON id_puerto = id_logistico " +
+          "LEFT JOIN tp.sucursal ON id_sucursal = id_logistico " +
+          "INNER JOIN tp.producto P USING(id_producto) " +
+        "WHERE id_producto IN ('" + id_productos + "');"
       );
       rs = tabla.executeQuery();
 
@@ -307,34 +308,35 @@ public class Gestor_Stock {
         if(rs.getString("id_centro") != null) {
           sucursal = new Centro(
             rs.getString("id_centro"), 
-            rs.getString("nombre"), 
-            ESTADO_SUCURSAL.valueOf(rs.getString("estado")), 
-            rs.getString("horario_apertura"), 
-            rs.getString("horario_apertura")
+            rs.getString("Cnombre"), 
+            ESTADO_SUCURSAL.valueOf(rs.getString("Cestado")), 
+            rs.getString("Chorario_apertura"), 
+            rs.getString("Chorario_apertura")
           );
         } else if(rs.getString("id_puerto") != null) {
           sucursal = new Puerto(
             rs.getString("id_puerto"), 
-            rs.getString("nombre"), 
-            ESTADO_SUCURSAL.valueOf(rs.getString("estado")), 
-            rs.getString("horario_apertura"), 
-            rs.getString("horario_apertura")
+            rs.getString("Cnombre"), 
+            ESTADO_SUCURSAL.valueOf(rs.getString("Cestado")), 
+            rs.getString("Chorario_apertura"), 
+            rs.getString("Chorario_apertura")
           );
         } else {
           sucursal = new Sucursal(
             rs.getString("id_sucursal"), 
-            rs.getString("nombre"), 
-            ESTADO_SUCURSAL.valueOf(rs.getString("estado")), 
-            rs.getString("horario_apertura"), 
-            rs.getString("horario_apertura")
+            rs.getString("Cnombre"), 
+            ESTADO_SUCURSAL.valueOf(rs.getString("Cestado")), 
+            rs.getString("Chorario_apertura"), 
+            rs.getString("Chorario_apertura")
           );
         }
+
         Producto producto = new Producto(
           rs.getString("id_producto"), 
-          rs.getString("P.nombre"), 
-          rs.getString("P.descripcion"), 
-          rs.getDouble("P.precio_unit"), 
-          rs.getDouble("P.precio_kg")
+          rs.getString("Pnombre"), 
+          rs.getString("Pdescripcion"), 
+          rs.getDouble("Pprecio_unit"), 
+          rs.getDouble("Pprecio_kg")
         );
 
         resultado.add(new Stock(
@@ -345,7 +347,7 @@ public class Gestor_Stock {
           sucursal
         ));
       } 
-      if(resultado.get(0) == null){
+      if(resultado.size() < 1){
         throw new StockNoEncontradoException("Ninguna sucursal cuenta con los productos requeridos en stock.");
       }
 

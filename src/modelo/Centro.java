@@ -1,7 +1,6 @@
 package modelo;
 
 public class Centro extends Centro_Logistico{
-
     public Centro(){
         this.id_logistico = null;
         this.nombre = null;
@@ -9,8 +8,7 @@ public class Centro extends Centro_Logistico{
         this.horario_apertura = null;
         this.horario_cierre = null;
     }
-
-    public Centro(String id_logistico, String nombre, ESTADO_SUCURSAL estado, String horario_apertura, String horario_cierre){
+    public Centro(Integer id_logistico, String nombre, ESTADO_SUCURSAL estado, String horario_apertura, String horario_cierre){
         this.id_logistico = id_logistico;
         this.nombre = nombre;
         this.estado = estado;

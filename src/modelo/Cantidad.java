@@ -1,13 +1,14 @@
 package modelo;
 
 public class Cantidad {
-  private String id_cantidad;
+  private Integer id_cantidad;
   private Orden_Provision orden_provision;
   private Integer cantidadUnidades;
   private Double cantidadKg;
   private Producto producto;
   
-  public Cantidad(String id_cantidad, Orden_Provision orden_provision, Integer cantidadUnidades, Double cantidadKg,
+  
+  public Cantidad(Integer id_cantidad, Orden_Provision orden_provision, Integer cantidadUnidades, Double cantidadKg,
       Producto producto) {
     this.id_cantidad = id_cantidad;
     this.orden_provision = orden_provision;
@@ -16,12 +17,6 @@ public class Cantidad {
     this.producto = producto;
   }
   
-  public String getId_cantidad() {
-    return id_cantidad;
-  }
-  public void setId_cantidad(String id_cantidad) {
-    this.id_cantidad = id_cantidad;
-  }
   public Orden_Provision getOrden_provision() {
     return orden_provision;
   }
@@ -45,6 +40,14 @@ public class Cantidad {
   }
   public void setProducto(Producto producto) {
     this.producto = producto;
+  }
+
+  public Integer getId_cantidad() {
+    return id_cantidad;
+  }
+
+  public void setId_cantidad(Integer id_cantidad) {
+    this.id_cantidad = id_cantidad;
   }
   
 }

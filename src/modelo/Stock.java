@@ -1,13 +1,13 @@
 package modelo;
 
-public class Stock implements Gestor {
-  private String id_stock;
+public class Stock {
+  private Integer id_stock;
   private Integer cantidadUnidades;
   private Double cantidadKg;
   private Producto producto;
   private Centro_Logistico sucursal;
   
-  public Stock(String id_stock, Integer cantidadUnidades, Double cantidadKg, Producto producto, Centro_Logistico sucursal) {
+  public Stock(Integer id_stock, Integer cantidadUnidades, Double cantidadKg, Producto producto, Centro_Logistico sucursal) {
     this.id_stock = id_stock;
     this.cantidadUnidades = cantidadUnidades;
     this.cantidadKg = cantidadKg;
@@ -17,7 +17,7 @@ public class Stock implements Gestor {
   public Centro_Logistico getSucursal() {
     return sucursal;
   }
-  public String getId_stock() {
+  public Integer getId_stock() {
     return id_stock;
   }
   public Integer getCantidadUnidades() {

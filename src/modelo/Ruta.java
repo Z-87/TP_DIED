@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Ruta {
-    String id_ruta;
+    Integer id_ruta;
     Centro_Logistico sucursal_origen;
     Centro_Logistico sucursal_destino;
     Double capacidad;
@@ -18,7 +18,7 @@ public class Ruta {
     public Ruta() {
     }
 
-    public Ruta(String id_ruta, Centro_Logistico sucursal_origen, Centro_Logistico sucursal_destino, double capacidad,
+    public Ruta(Integer id_ruta, Centro_Logistico sucursal_origen, Centro_Logistico sucursal_destino, double capacidad,
             int duracion, ESTADO_RUTA estado) {
         this.id_ruta = id_ruta;
         this.sucursal_origen = sucursal_origen;
@@ -28,11 +28,11 @@ public class Ruta {
         this.estado = estado;
     }
 
-    public String getId_ruta() {
+    public Integer getId_ruta() {
         return id_ruta;
     }
 
-    public void setId_ruta(String id_ruta) {
+    public void setId_ruta(Integer id_ruta) {
         this.id_ruta = id_ruta;
     }
 
