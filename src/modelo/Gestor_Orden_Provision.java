@@ -11,7 +11,7 @@ import java.util.Date;
 import exceptions.OrdenesNoEncontradasException;
 
 public class Gestor_Orden_Provision {
-  public Orden_Provision crearOrden_Provision(Date fechaOrden, Centro_Logistico sucursalDestino, Double tiempoEsperado) {
+  public Orden_Provision crearOrden_Provision(Date fechaOrden, Centro_Logistico sucursalDestino, Double tiempoEsperado, ArrayList<Cantidad> productos) {
     Orden_Provision orden = null;
     Connection conn = null;
     PreparedStatement tabla = null;
@@ -34,7 +34,30 @@ public class Gestor_Orden_Provision {
         "' )"
       );
       tabla.executeUpdate();
-      orden = new Orden_Provision(id_siguiente, fechaOrden, sucursalDestino, null, tiempoEsperado, ESTADO_ORDEN.EN_PROCESO, new ArrayList<Cantidad>(), null);
+      
+      rs.close();
+      tabla.close();
+
+      //INSERTs de Cantidad.
+      rs = conn.prepareStatement("SELECT id_cantidad FROM tp.cantidad ORDER BY id_cantidad DESC LIMIT 1").executeQuery();
+      rs.next();
+      String id_next = Integer.toString(Integer.parseInt(rs.getString("id_cantidad")) + 1);
+      String sql = "INSERT INTO tp.cantidad(id_cantidad, id_producto, id_orden, cantidad_unit, cantidad_kg) VALUES";
+      
+      for(Cantidad c : productos) {
+        sql += "('" + 
+          id_next + "','" + 
+          c.getProducto().getId_producto() + "','" + 
+          id_siguiente + "'," +
+          c.getCantidadUnidades() + "," +
+          c.getCantidadKg() +
+        "' ), ";
+      }
+
+      tabla = conn.prepareStatement(sql.substring(0, sql.length() - 2) + ";");
+      tabla.executeUpdate();
+
+      orden = new Orden_Provision(id_siguiente, fechaOrden, sucursalDestino, null, tiempoEsperado, ESTADO_ORDEN.EN_PROCESO, productos, null);
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (SQLException e) {
@@ -139,5 +162,9 @@ public class Gestor_Orden_Provision {
     return ordenes;
   }  
 
+  public ArrayList<Centro_Logistico> listarPosiblesOrigenes(Orden_Provision orden) {
+    Gestor_Stock gestor_stock = new Gestor_Stock();
+    gestor_stock.
+  }
 
 }
