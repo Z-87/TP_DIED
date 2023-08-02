@@ -34,8 +34,10 @@ public class App {
     // grafo.eliminarRuta(grafo.getRutas().get(5));
     // System.out.println(grafo.getRutas());
 
-    // Gestor_Producto gestorP = new Gestor_Producto();
-    // Producto p = gestorP.crearProducto("salamin", "un salamin", 200.0, 1200.0);
+    Gestor_Producto gestorP = new Gestor_Producto();
+    Producto p1 = gestorP.crearProducto("salamin", "un salamin", 200.0, 1200.0);
+    Producto p2 = gestorP.crearProducto("salamin", "un salamin", 200.0, 1200.0);
+
 
     // System.out.println(p.getId_producto());
     // ArrayList<ArrayList<Centro_Logistico>> caminos = grafo.obtenerCaminos(grafo.getSucursales().get(10), grafo.getSucursales().get(0));
@@ -51,7 +53,11 @@ public class App {
     // Stock stock = gestor.crearStock(10, 1.0, p, s);
     // gestor.eliminarStock(stock);
     try {
-      System.out.println(gestor.buscarStock(grafo.getSucursales().get(10)));
+      ArrayList<Producto> productos = new ArrayList<>();
+      productos.add(p1);
+      productos.add(p2);
+
+      System.out.println(gestor.buscarStock(productos));
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
