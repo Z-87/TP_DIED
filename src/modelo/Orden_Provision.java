@@ -1,5 +1,10 @@
 package modelo;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -50,6 +55,48 @@ public class Orden_Provision {
   }
 
   public void setProductos(ArrayList<Cantidad> productos) {
+    this.productos = productos;
+  }
+
+   public void loadProductos() {
+    Connection conn = null;
+    PreparedStatement tabla = null;
+    ResultSet rs = null;
+    try {
+      Class.forName("org.postgresql.Driver");
+      conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
+      tabla = conn.prepareStatement("SELECT * FROM tp.Cantidad INNER JOIN tp.Producto USING(id_producto) WHERE id_orden = " + this.id_orden);
+      rs = tabla.executeQuery();
+      while(rs.next()){
+        Cantidad c = new Cantidad(
+          rs.getInt("id_cantidad"),
+          this,
+          rs.getDouble("cantidad"),
+          UNIDAD.valueOf(rs.getString("unidad")),
+          new Producto(
+            rs.getInt("id_producto"),
+            rs.getString("nombre"),
+            rs.getString("descripcion"),
+            rs.getDouble("precio")
+          )
+        );
+        this.productos.add(c);
+      }
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (EnumConstantNotPresentException e){
+      e.printStackTrace();
+    } 
+    finally { //Libera los recursos
+      if(rs!=null) try { rs.close(); }
+      catch (SQLException e) { e.printStackTrace(); }
+      if(tabla!=null) try { tabla.close(); }
+      catch (SQLException e) {e.printStackTrace(); }
+      if(conn!=null) try { conn.close(); }
+      catch (SQLException e) { e.printStackTrace(); }
+    }
     this.productos = productos;
   }
 

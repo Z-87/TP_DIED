@@ -18,13 +18,13 @@ public class Gestor_Producto {
       Class.forName("org.postgresql.Driver");
       conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
       tabla = conn.prepareStatement(
-        "INSERT INTO tp.producto(nombre, descripcion, precio_unit, precio_kg)" + 
-        "VALUES ('" + producto.getNombre() + "','" + producto.getDescripcion() + "','" + producto.getPrecioUnitario() + "','" + producto.getPrecioKg() + "')" +
+        "INSERT INTO tp.producto(nombre, descripcion, precio)" + 
+        "VALUES ('" + producto.getNombre() + "','" + producto.getDescripcion() + "','" + producto.getPrecio() + "')" +
         "RETURNING id_producto"
       );
       rs = tabla.executeQuery();
       rs.next();
-      
+
       producto.setId_producto(rs.getInt("id_producto"));
       productos.add(producto);
     } catch (ClassNotFoundException e) {
@@ -85,8 +85,7 @@ public class Gestor_Producto {
         "UPDATE tp.producto SET" + 
           "nombre = '" + productoEditado.getNombre() + "', " +
           "descripcion = '" + productoEditado.getDescripcion() + "', " +
-          "precio_unit = " + productoEditado.getPrecioUnitario() + ". " +
-          "precio_kg = " + productoEditado.getPrecioKg() + " " +
+          "precio = " + productoEditado.getPrecio() +
         "WHERE id_producto = '" + producto.getId_producto() + "'"
       );
       tabla.executeUpdate();
@@ -125,8 +124,7 @@ public class Gestor_Producto {
           rs.getInt("id_producto"), 
           rs.getString("nombre"), 
           rs.getString("descripcion"), 
-          (rs.getDouble("precio_unit") != 0) ? rs.getDouble("precio_unit") : null, 
-          (rs.getDouble("precio_kg") != 0) ? rs.getDouble("precio_kg") : null
+          rs.getDouble("precio")
         ));
       }
 

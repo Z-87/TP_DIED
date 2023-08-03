@@ -3,8 +3,7 @@ CREATE TABLE tp.Producto (
     id_producto serial,
     nombre character varying(20),
     descripcion character varying(100),
-    precio_unit real,
-    precio_kg real,
+    precio real,
     CONSTRAINT PK_producto PRIMARY KEY (id_producto)
 );
 
@@ -40,8 +39,8 @@ CREATE TABLE tp.Stock (
     id_stock serial,
     id_logistico serial,
     id_producto serial,
-    cantidad_unit integer,
-    cantidad_kg real,
+    cantidad real,
+    unidad character varying(20),
     CONSTRAINT FK_Stock__Centro_Logistico FOREIGN KEY (id_logistico) REFERENCES tp.Centro_Logistico (id_logistico),
     CONSTRAINT FK_Stock__Producto FOREIGN KEY (id_producto) REFERENCES tp.Producto (id_producto),
     CONSTRAINT PK_Stock PRIMARY KEY (id_stock)
@@ -78,7 +77,7 @@ CREATE TABLE tp.Rutas_Recorrido (
 CREATE TABLE tp.Orden_Provision (
     id_orden serial,
     fecha_orden Date,
-    tiempo_esperado integer,
+    tiempo_esperado real,
     estado character varying(20),
     sucursal_origen serial,
     sucursal_destino serial,
@@ -93,8 +92,8 @@ CREATE TABLE tp.Cantidad (
     id_cantidad serial,
     id_producto serial,
     id_orden serial,
-    cantidad_unit integer,
-    cantidad_kg real,
+    cantidad real,
+    unidad character varying(20),
     CONSTRAINT FK_Cantidad__Producto FOREIGN KEY (id_producto) REFERENCES tp.Producto (id_producto),
     CONSTRAINT FK_Cantidad__Orden FOREIGN KEY (id_orden) REFERENCES tp.Orden_Provision (id_orden),
     CONSTRAINT PK_Cantidad PRIMARY KEY (id_cantidad)

@@ -4,18 +4,16 @@ public class Producto {
   private Integer id_producto;
   private String nombre;
   private String descripcion;
-  private Double precioUnitario;
-  private Double precioKg;
+  private Double precio;
 
   public Producto() {
   }
 
-  public Producto(Integer id_producto, String nombre, String descripcion, Double precioUnitario, Double precioKg) {
+  public Producto(Integer id_producto, String nombre, String descripcion, Double precio) {
     this.id_producto = id_producto;
     this.nombre = nombre;
     this.descripcion = descripcion;
-    this.precioUnitario = precioUnitario;
-    this.precioKg = precioKg;
+    this.precio = precio;
   }
   
   public String getNombre() {
@@ -24,12 +22,7 @@ public class Producto {
   public String getDescripcion() {
     return descripcion;
   }
-  public Double getPrecioUnitario() {
-    return precioUnitario;
-  }
-  public Double getPrecioKg() {
-    return precioKg;
-  }
+  
   public Integer getId_producto() {
     return id_producto;
   }
@@ -46,12 +39,11 @@ public class Producto {
     this.descripcion = descripcion;
   }
 
-  public void setPrecioUnitario(Double precioUnitario) {
-    this.precioUnitario = precioUnitario;
+  public Double getPrecio() {
+    return precio;
   }
 
-  public void setPrecioKg(Double precioKg) {
-    this.precioKg = precioKg;
+  public void setPrecio(Double precio) {
+    this.precio = precio;
   }
-
 }

@@ -751,6 +751,9 @@ public class Grafo {
         }
         return rutas;
     }
-
+    public Grafo() {
+      this.cargarSucursales();
+      this.cargarRutas();
+    }
 }
 
