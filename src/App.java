@@ -15,6 +15,7 @@ import modelo.Grafo;
 import modelo.Orden_Provision;
 import modelo.Producto;
 import modelo.Puerto;
+import modelo.Recorrido;
 import modelo.Ruta;
 import modelo.Stock;
 import modelo.Sucursal;
@@ -25,11 +26,11 @@ import modelo.UNIDAD;
 public class App {
   public static void main(String[] args) throws Exception {
     Grafo grafo = new Grafo();
-    grafo.cargarSucursales();
+    // grafo.cargarSucursales();
     // System.out.println(grafo.getSucursales());
-    Sucursal s = (Sucursal)grafo.getSucursales().get(1);
+    Centro_Logistico s = grafo.getSucursales().get(0);
     // grafo.cargarRutas();
-    // System.out.println(grafo.getRutas());
+    System.out.println(grafo.getSucursales());
     // Ruta ruta = new Ruta("8", grafo.getSucursales().get(1), grafo.getSucursales().get(3), 50.0, 145, ESTADO_RUTA.OPERATIVA);
     // grafo.cargarRuta(ruta);
     // Centro_Logistico sucursal = new Centro("8", "Centro 2", ESTADO_SUCURSAL.OPERATIVA, "8:00", "15:00");
@@ -62,6 +63,14 @@ public class App {
     ArrayList<Centro_Logistico> posiblesOrigenes = GOP.listarPosiblesOrigenes(listado.get(listado.size()-1));
     for(Centro_Logistico i : posiblesOrigenes){
       System.out.println("- " + i.getNombre());
+      for(ArrayList<Ruta> r : grafo.obtenerRutas(i, s)){
+          System.out.println("=====================================");
+          for(Ruta ruta : r){
+            System.out.print(ruta.getSucursal_Origen().getNombre()+ " > ");           
+          }  
+          System.out.println("");
+        
+      }
     }
 
     // System.out.println(p.getId_producto());
