@@ -44,7 +44,7 @@ public class Grafo {
 
             while(rs.next()){
                 Centro aux = new Centro();
-                aux.setId_logistico(rs.getString("id_logistico"));
+                aux.setId_logistico(rs.getInt("id_logistico"));
                 aux.setNombre(rs.getString("nombre"));
                 aux.setHorario_apertura(rs.getString("horario_apertura"));
                 aux.setHorario_cierre(rs.getString("horario_cierre"));
@@ -58,7 +58,7 @@ public class Grafo {
 
             while(rs.next()){
                 Sucursal aux2 = new Sucursal();
-                aux2.setId_logistico(rs.getString("id_logistico"));
+                aux2.setId_logistico(rs.getInt("id_logistico"));
                 aux2.setNombre(rs.getString("nombre"));
                 aux2.setHorario_apertura(rs.getString("horario_apertura"));
                 aux2.setHorario_cierre(rs.getString("horario_cierre"));
@@ -72,7 +72,7 @@ public class Grafo {
 
             while(rs.next()){
                 Puerto aux3 = new Puerto();
-                aux3.setId_logistico(rs.getString("id_logistico"));
+                aux3.setId_logistico(rs.getInt("id_logistico"));
                 aux3.setNombre(rs.getString("nombre"));
                 aux3.setHorario_apertura(rs.getString("horario_apertura"));
                 aux3.setHorario_cierre(rs.getString("horario_cierre"));
@@ -104,10 +104,10 @@ public class Grafo {
             try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(id_logistico, nombre, estado, horario_apertura, horario_cierre) VALUES ('"+a.getId_logistico()+"','"+a.getNombre()+"','"+((a.getEstado()).toString())+"','"+a.getHorario_apertura()+"','"+a.getHorario_cierre()+"')");
+            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(id_logistico, nombre, estado, horario_apertura, horario_cierre) VALUES ("+a.getId_logistico()+",'"+a.getNombre()+"','"+((a.getEstado()).toString())+"','"+a.getHorario_apertura()+"','"+a.getHorario_cierre()+"')");
             tabla.executeUpdate();
             tabla.close();
-            tabla = conn.prepareStatement("INSERT INTO tp.Sucursal(id_centro) VALUES ('"+a.getId_logistico()+"')");
+            tabla = conn.prepareStatement("INSERT INTO tp.Sucursal(id_centro) VALUES ("+a.getId_logistico()+")");
             tabla.executeUpdate();
 
             sucursales.add(a);
@@ -138,10 +138,10 @@ public class Grafo {
             rutas.forEach(r -> eliminarRuta(r));
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("DELETE FROM tp.Sucursal WHERE id_sucursal='"+b.getId_logistico()+"'");
+            tabla = conn.prepareStatement("DELETE FROM tp.Sucursal WHERE id_sucursal="+b.getId_logistico()+"");
             tabla.executeUpdate();
             tabla.close();
-            tabla = conn.prepareStatement("DELETE FROM tp.Centro_Logistico WHERE id_logistico ='"+b.getId_logistico()+"'");
+            tabla = conn.prepareStatement("DELETE FROM tp.Centro_Logistico WHERE id_logistico ="+b.getId_logistico()+"");
             tabla.executeUpdate();
             this.sucursales.remove(b);
         } catch (ClassNotFoundException e) {
@@ -167,10 +167,10 @@ public class Grafo {
             try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(id_logistico, nombre, estado, horario_apertura, horario_cierre) VALUES ('"+a.getId_logistico()+"','"+a.getNombre()+"','"+((a.getEstado()).toString())+"','"+a.getHorario_apertura()+"','"+a.getHorario_cierre()+"')");
+            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(id_logistico, nombre, estado, horario_apertura, horario_cierre) VALUES ("+a.getId_logistico()+",'"+a.getNombre()+"','"+((a.getEstado()).toString())+"','"+a.getHorario_apertura()+"','"+a.getHorario_cierre()+"')");
             tabla.executeUpdate();
             tabla.close();
-            tabla = conn.prepareStatement("INSERT INTO tp.Centro(id_centro) VALUES ('"+a.getId_logistico()+"')");
+            tabla = conn.prepareStatement("INSERT INTO tp.Centro(id_centro) VALUES ("+a.getId_logistico()+")");
             tabla.executeUpdate();
 
             sucursales.add(a);
@@ -198,10 +198,10 @@ public class Grafo {
         try{
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("DELETE FROM tp.Centro WHERE id_centro='"+b.getId_logistico()+"'");
+            tabla = conn.prepareStatement("DELETE FROM tp.Centro WHERE id_centro="+b.getId_logistico());
             tabla.executeUpdate();
             tabla.close();
-            tabla = conn.prepareStatement("DELETE FROM tp.Centro_Logistico WHERE id_logistico ='"+b.getId_logistico()+"'");
+            tabla = conn.prepareStatement("DELETE FROM tp.Centro_Logistico WHERE id_logistico ="+b.getId_logistico());
             tabla.executeUpdate();
             this.sucursales.remove(b);
         } catch (ClassNotFoundException e) {
@@ -227,10 +227,10 @@ public class Grafo {
             try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(id_logistico, nombre, estado, horario_apertura, horario_cierre) VALUES ('"+a.getId_logistico()+"','"+a.getNombre()+"','"+((a.getEstado()).toString())+"','"+a.getHorario_apertura()+"','"+a.getHorario_cierre()+"')");
+            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(id_logistico, nombre, estado, horario_apertura, horario_cierre) VALUES ("+a.getId_logistico()+",'"+a.getNombre()+"','"+((a.getEstado()).toString())+"','"+a.getHorario_apertura()+"','"+a.getHorario_cierre()+"')");
             tabla.executeUpdate();
             tabla.close();
-            tabla = conn.prepareStatement("INSERT INTO tp.Puerto(id_puerto) VALUES ('"+a.getId_logistico()+"')");
+            tabla = conn.prepareStatement("INSERT INTO tp.Puerto(id_puerto) VALUES ("+a.getId_logistico()+")");
             tabla.executeUpdate();
 
             sucursales.add(a);
@@ -260,7 +260,7 @@ public class Grafo {
             tabla = conn.prepareStatement("DELETE FROM tp.Puerto WHERE id_puerto='"+b.getId_logistico()+"'");
             tabla.executeUpdate();
             tabla.close();
-            tabla = conn.prepareStatement("DELETE FROM tp.Centro_Logistico WHERE id_logistico ='"+b.getId_logistico()+"'");
+            tabla = conn.prepareStatement("DELETE FROM tp.Centro_Logistico WHERE id_logistico ="+b.getId_logistico());
             tabla.executeUpdate();
             this.sucursales.remove(b);
         } catch (ClassNotFoundException e) {
@@ -453,7 +453,7 @@ public class Grafo {
                 //System.out.print(" "+c.getNombre()+" -> ");
                 //System.out.print(" "+pr[cont]+" -> ");
                 c.setPageRank(pr[cont]);
-                tabla = conn.prepareStatement("UPDATE tp.Centro_Logistico SET pageRank = "+pr[cont]+" WHERE id_logistico = '"+c.getId_logistico()+"'");
+                tabla = conn.prepareStatement("UPDATE tp.Centro_Logistico SET pageRank = "+pr[cont]+" WHERE id_logistico = "+c.getId_logistico());
                 tabla.executeUpdate();
                 tabla.close();
                 cont++;
@@ -479,7 +479,7 @@ public class Grafo {
 ///                                                                                                                             ///
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Centro_Logistico consultarScursal_Id(String id){
+    public Centro_Logistico consultarScursal_Id(Integer id){
         return this.sucursales.stream().filter(a -> id.equals(a.getId_logistico())).collect(Collectors.toList()).get(0);
     }
 
@@ -534,9 +534,9 @@ public class Grafo {
 
             while(rs.next()){
                 Ruta aux = new Ruta();
-                aux.setId_ruta(rs.getString("id_ruta"));
-                String aux1=rs.getString("sucursal_origen");
-                String aux2=rs.getString("sucursal_destino");
+                aux.setId_ruta(rs.getInt("id_ruta"));
+                Integer aux1=rs.getInt("sucursal_origen");
+                Integer aux2=rs.getInt("sucursal_destino");
                 aux.setSucursal_Origen((this.sucursales.stream()
                                                         .filter(a -> (aux1.equals(a.getId_logistico())))
                                                         .collect(Collectors.toList())).get(0));
@@ -574,7 +574,7 @@ public class Grafo {
             try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("INSERT INTO tp.Ruta(id_ruta, sucursal_origen, sucursal_destino, estado, capacidad, duracion) VALUES ('"+r.getId_ruta()+"','"+r.getSucursal_Origen().getId_logistico()+"','"+r.getSucursal_Destino().getId_logistico()+"','"+((r.getEstado()).toString())+"',"+(r.getCapacidad().toString())+","+r.getDuracion().toString()+")");
+            tabla = conn.prepareStatement("INSERT INTO tp.Ruta(id_ruta, sucursal_origen, sucursal_destino, estado, capacidad, duracion) VALUES ("+r.getId_ruta()+","+r.getSucursal_Origen().getId_logistico()+","+r.getSucursal_Destino().getId_logistico()+",'"+((r.getEstado()).toString())+"',"+(r.getCapacidad().toString())+","+r.getDuracion().toString()+")");
             tabla.executeUpdate();
 
             rutas.add(r);
@@ -601,7 +601,7 @@ public class Grafo {
         try{
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("DELETE FROM tp.Ruta WHERE id_ruta ='"+ r.getId_ruta()+"'");
+            tabla = conn.prepareStatement("DELETE FROM tp.Ruta WHERE id_ruta ="+ r.getId_ruta());
             tabla.executeUpdate();
             this.rutas.remove(r);
         } catch (ClassNotFoundException e) {
@@ -619,7 +619,7 @@ public class Grafo {
         }
     }
 
-    public Ruta consultarRuta_Id(String id){
+    public Ruta consultarRuta_Id(Integer id){
         return this.rutas.stream().filter(a -> id.equals(a.getId_ruta())).collect(Collectors.toList()).get(0);
     }
 
@@ -751,6 +751,9 @@ public class Grafo {
         }
         return rutas;
     }
-
+    public Grafo() {
+      this.cargarSucursales();
+      this.cargarRutas();
+    }
 }
 

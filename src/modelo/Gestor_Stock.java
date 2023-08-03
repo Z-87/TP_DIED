@@ -11,29 +11,25 @@ import java.util.List;
 import exceptions.StockNoEncontradoException;
 
 public class Gestor_Stock {
-  public Stock crearStock(Integer cantidad_unit, Double cantidad_kg, Producto producto, Centro_Logistico sucursal) {
-    Stock stock = null;
+  public Stock crearStock(Stock stock) {
     Connection conn = null;
     PreparedStatement tabla = null;
     ResultSet rs = null;
     try {
       Class.forName("org.postgresql.Driver");
       conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-      rs = conn.prepareStatement("SELECT id_stock FROM tp.stock ORDER BY id_stock DESC LIMIT 1").executeQuery();
-      rs.next();
-      String id_siguiente = Integer.toString(Integer.parseInt(rs.getString("id_stock")) + 1);
       tabla = conn.prepareStatement(
-        "INSERT INTO tp.stock(id_stock, id_logistico, id_producto, cantidad_unit, cantidad_kg)" + 
-        "VALUES ('" + 
-          id_siguiente + "','" + 
-          sucursal.getId_logistico() + "','" + 
-          producto.getId_producto() + "','" + 
-          cantidad_unit + "','" + 
-          cantidad_kg + 
-        "')"
+        "INSERT INTO tp.stock(id_logistico, id_producto, cantidad, unidad)" + 
+        "VALUES ('" +
+          stock.getSucursal().getId_logistico() + "','" + 
+          stock.getProducto().getId_producto() + "'," + 
+          stock.getCantidad() + ", '" + 
+          stock.getUnidad() +
+        "')" + 
+        "RETURNING id_stock"
       );
-      tabla.executeUpdate();
-      stock = new Stock(id_siguiente, cantidad_unit, cantidad_kg, producto, sucursal);
+      rs = tabla.executeQuery();
+      stock = new Stock(rs.getInt("id_stock"), stock.getCantidad(), stock.getUnidad(), stock.getProducto(), stock.getSucursal());
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (SQLException e) {
@@ -60,7 +56,7 @@ public class Gestor_Stock {
       Class.forName("org.postgresql.Driver");
       conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
       tabla = conn.prepareStatement(
-        "DELETE FROM tp.stock WHERE id_stock = '" + stock.getId_stock() + "'"
+        "DELETE FROM tp.stock WHERE id_stock = " + stock.getId_stock()
       );
       tabla.executeUpdate();
     } catch (ClassNotFoundException e) {
@@ -91,9 +87,9 @@ public class Gestor_Stock {
         "UPDATE tp.stock SET" + 
           "sucursal = '" + stockEditado.getSucursal().getId_logistico() + "', " +
           "producto = '" + stockEditado.getProducto().getId_producto() + "', " +
-          "cantidad_unit = " + stockEditado.getCantidadUnidades() + ". " +
-          "cantidad_kg = " + stockEditado.getCantidadKg() + " " +
-        "WHERE id_stock = '" + stock.getId_stock() + "'"
+          "cantidad = " + stockEditado.getCantidad() + ". " +
+          "unidad = '" + stockEditado.getUnidad() + "' " +
+        "WHERE id_stock = " + stock.getId_stock()
       );
       tabla.executeUpdate();
     } catch (ClassNotFoundException e) {
@@ -123,15 +119,15 @@ public class Gestor_Stock {
       conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
       tabla = conn.prepareStatement(
         "SELECT * FROM tp.stock " +
-        "WHERE id_logistico = '" + sucursal.getId_logistico() + "' AND id_producto = '" + producto.getId_producto() + "'"
+        "WHERE id_logistico = " + sucursal.getId_logistico() + " AND id_producto = " + producto.getId_producto()
       );
       rs = tabla.executeQuery();
 
       if(rs.next()) {
         resultado = new Stock(
-          rs.getString("id_stock"), 
-          (Integer)Integer.parseInt(rs.getString("cantidad_unit")), 
-          (Double)Double.parseDouble(rs.getString("cantidad_unit")), 
+          rs.getInt("id_stock"), 
+          rs.getDouble("cantidad"), 
+          UNIDAD.valueOf(rs.getString("unidad")),
           producto, sucursal
         );
       } else {
@@ -166,16 +162,16 @@ public class Gestor_Stock {
       conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
       tabla = conn.prepareStatement(
         "SELECT * FROM tp.stock INNER JOIN tp.producto USING(id_producto)" +
-        "WHERE id_logistico = '" + sucursal.getId_logistico() + "'"
+        "WHERE id_logistico = " + sucursal.getId_logistico() + ""
       );
       rs = tabla.executeQuery();
 
       while(rs.next()) {
         resultado.add(new Stock(
-          rs.getString("id_stock"), 
-          rs.getInt("cantidad_unit"), 
-          rs.getDouble("cantidad_unit"), 
-          new Producto(rs.getString("id_producto"), rs.getString("nombre"), rs.getString("descripcion"), rs.getDouble("precio_unit"), rs.getDouble("precio_kg")), 
+          rs.getInt("id_stock"), 
+          rs.getDouble("cantidad"), 
+          UNIDAD.valueOf(rs.getString("unidad")),
+          new Producto(rs.getInt("id_producto"), rs.getString("nombre"), rs.getString("descripcion"), rs.getDouble("precio")), 
           sucursal
         ));
       } 
@@ -213,9 +209,9 @@ public class Gestor_Stock {
       tabla = conn.prepareStatement(
         "SELECT * FROM tp.stock" + 
         "INNER JOIN tp.centro_logistico USING(id_logistico)" +
-        "INNER JOIN tp.centro ON id_centro = id_logistico" +
-        "INNER JOIN tp.puerto ON id_puerto = id_logistico" +
-        "INNER JOIN tp.sucursal ON id_sucursal = id_logistico" +
+        "LEFT JOIN tp.centro ON id_centro = id_logistico" +
+        "LEFT JOIN tp.puerto ON id_puerto = id_logistico" +
+        "LEFT JOIN tp.sucursal ON id_sucursal = id_logistico" +
         "WHERE id_producto = '" + producto.getId_producto() + "'"
       );
       rs = tabla.executeQuery();
@@ -224,7 +220,7 @@ public class Gestor_Stock {
         Centro_Logistico sucursal;
         if(rs.getString("id_centro") != null) {
           sucursal = new Centro(
-            rs.getString("id_centro"), 
+            rs.getInt("id_centro"), 
             rs.getString("nombre"), 
             ESTADO_SUCURSAL.valueOf(rs.getString("estado")), 
             rs.getString("horario_apertura"), 
@@ -232,7 +228,7 @@ public class Gestor_Stock {
           );
         } else if(rs.getString("id_puerto") != null) {
           sucursal = new Puerto(
-            rs.getString("id_puerto"), 
+            rs.getInt("id_puerto"), 
             rs.getString("nombre"), 
             ESTADO_SUCURSAL.valueOf(rs.getString("estado")), 
             rs.getString("horario_apertura"), 
@@ -240,7 +236,7 @@ public class Gestor_Stock {
           );
         } else {
           sucursal = new Sucursal(
-            rs.getString("id_sucursal"), 
+            rs.getInt("id_sucursal"), 
             rs.getString("nombre"), 
             ESTADO_SUCURSAL.valueOf(rs.getString("estado")), 
             rs.getString("horario_apertura"), 
@@ -249,14 +245,14 @@ public class Gestor_Stock {
         }
         
         resultado.add(new Stock(
-          rs.getString("id_stock"), 
-          rs.getInt("cantidad_unit"), 
-          rs.getDouble("cantidad_unit"), 
+          rs.getInt("id_stock"),
+          rs.getDouble("cantidad"), 
+          UNIDAD.valueOf(rs.getString("unidad")),
           producto,
           sucursal
         ));
       } 
-      if(resultado.get(0) == null){
+      if(resultado.size() < 1){
         throw new StockNoEncontradoException("Ninguna sucursal cuenta con " + producto.getNombre() + " en stock.");
       }
 
@@ -280,89 +276,9 @@ public class Gestor_Stock {
   }
 
   public ArrayList<Stock> buscarStock(ArrayList<Producto> productos) throws StockNoEncontradoException {
-    ArrayList<Stock> resultado = new ArrayList<>();
-    Connection conn = null;
-    PreparedStatement tabla = null;
-    ResultSet rs = null;
-    try {
-      Class.forName("org.postgresql.Driver");
-      conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-      
-      String id_productos = String.join("','", productos.stream().map(p -> (p.getId_producto())).toList());
-      String sql = "SELECT * FROM tp.stock " + 
-          "INNER JOIN tp.centro_logistico USING(id_logistico) " +
-          "INNER JOIN tp.centro ON id_centro = id_logistico " +
-          "INNER JOIN tp.puerto ON id_puerto = id_logistico " +
-          "INNER JOIN tp.sucursal ON id_sucursal = id_logistico " +
-          "INNER JOIN tp.producto P USING(id_producto) " +
-        "WHERE id_producto IN ('" + id_productos + "') " +
-        "GROUP BY id_logistico HAVING COUNT(DISTINCT id_producto) = " + productos.size();
-      tabla = conn.prepareStatement(
-        sql
-      );
-      rs = tabla.executeQuery();
-
-      while(rs.next()) {
-        Centro_Logistico sucursal;
-        if(rs.getString("id_centro") != null) {
-          sucursal = new Centro(
-            rs.getString("id_centro"), 
-            rs.getString("nombre"), 
-            ESTADO_SUCURSAL.valueOf(rs.getString("estado")), 
-            rs.getString("horario_apertura"), 
-            rs.getString("horario_apertura")
-          );
-        } else if(rs.getString("id_puerto") != null) {
-          sucursal = new Puerto(
-            rs.getString("id_puerto"), 
-            rs.getString("nombre"), 
-            ESTADO_SUCURSAL.valueOf(rs.getString("estado")), 
-            rs.getString("horario_apertura"), 
-            rs.getString("horario_apertura")
-          );
-        } else {
-          sucursal = new Sucursal(
-            rs.getString("id_sucursal"), 
-            rs.getString("nombre"), 
-            ESTADO_SUCURSAL.valueOf(rs.getString("estado")), 
-            rs.getString("horario_apertura"), 
-            rs.getString("horario_apertura")
-          );
-        }
-        Producto producto = new Producto(
-          rs.getString("id_producto"), 
-          rs.getString("P.nombre"), 
-          rs.getString("P.descripcion"), 
-          rs.getDouble("P.precio_unit"), 
-          rs.getDouble("P.precio_kg")
-        );
-
-        resultado.add(new Stock(
-          rs.getString("id_stock"), 
-          rs.getInt("cantidad_unit"), 
-          rs.getDouble("cantidad_unit"), 
-          producto,
-          sucursal
-        ));
-      } 
-      if(resultado.get(0) == null){
-        throw new StockNoEncontradoException("Ninguna sucursal cuenta con los productos requeridos en stock.");
-      }
-
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } catch (EnumConstantNotPresentException e){
-      e.printStackTrace();
-    } 
-    finally { //Libera los recursos
-      if(rs!=null) try { rs.close(); }
-      catch (SQLException e) { e.printStackTrace(); }
-      if(tabla!=null) try { tabla.close(); }
-      catch (SQLException e) {e.printStackTrace(); }
-      if(conn!=null) try { conn.close(); }
-      catch (SQLException e) { e.printStackTrace(); }
+    ArrayList<Stock> resultado = new ArrayList<>();  
+    for(Producto p : productos) {
+      resultado.addAll(buscarStock(p));
     }
 
     return resultado;

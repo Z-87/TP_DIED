@@ -6,18 +6,17 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public abstract class Centro_Logistico {
-    protected String id_logistico;
+    protected Integer id_logistico;
     protected String nombre;
     protected ESTADO_SUCURSAL estado;
     protected String horario_apertura;
     protected String horario_cierre;
     protected double pageRank;
 
-    public String getId_logistico() {
-        return id_logistico;
-    }
-    public void setId_logistico(String id_logistico) {
-        this.id_logistico = id_logistico;
+    
+    @Override
+    public boolean equals(Object obj) {
+      return (obj instanceof Centro_Logistico && ((Centro_Logistico) obj).getId_logistico() == this.id_logistico);
     }
     public String getNombre() {
         return this.nombre;
@@ -94,6 +93,12 @@ public abstract class Centro_Logistico {
         } catch(SQLException e){
             e.printStackTrace();
         }
+    }
+    public Integer getId_logistico() {
+      return id_logistico;
+    }
+    public void setId_logistico(Integer id_logistico) {
+      this.id_logistico = id_logistico;
     }
     
 }
