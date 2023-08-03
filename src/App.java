@@ -28,7 +28,7 @@ public class App {
     Grafo grafo = new Grafo();
     // grafo.cargarSucursales();
     // System.out.println(grafo.getSucursales());
-    Centro_Logistico s = grafo.getSucursales().get(0);
+    Centro_Logistico s = grafo.getSucursales().get(4);
     // grafo.cargarRutas();
     System.out.println(grafo.getSucursales());
     // Ruta ruta = new Ruta("8", grafo.getSucursales().get(1), grafo.getSucursales().get(3), 50.0, 145, ESTADO_RUTA.OPERATIVA);
@@ -63,14 +63,15 @@ public class App {
     ArrayList<Centro_Logistico> posiblesOrigenes = GOP.listarPosiblesOrigenes(listado.get(listado.size()-1));
     for(Centro_Logistico i : posiblesOrigenes){
       System.out.println("- " + i.getNombre());
-      for(ArrayList<Ruta> r : grafo.obtenerRutas(i, s)){
+      for(ArrayList<Centro_Logistico> r : grafo.obtenerCaminos(i, s)){
           System.out.println("=====================================");
-          for(Ruta ruta : r){
-            System.out.print(ruta.getSucursal_Origen().getNombre()+ " > ");           
+          for(Centro_Logistico ruta : r){
+            System.out.print(ruta.getNombre()+ " > ");           
           }  
           System.out.println("");
-        
+          
       }
+      System.out.println("=====================================\n");
     }
 
     // System.out.println(p.getId_producto());
