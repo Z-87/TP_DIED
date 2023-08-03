@@ -164,7 +164,7 @@ public class Gestor_Orden_Provision {
           rs.getDouble("O_tiempo_esperado"),
           ESTADO_ORDEN.valueOf(rs.getString("O_estado")), 
           new ArrayList<Cantidad>(),
-          rs.getInt("O_id_recorrido")
+          null //[!] en listarSucursales no vamos a poder ver si tienen recorrido o no, ver si se implementa.
         );
         o.loadProductos();
         ordenes.add(o);
@@ -216,4 +216,45 @@ public class Gestor_Orden_Provision {
     return resultado;
   }
   
+  public void seleccionarRecorrido(Orden_Provision orden, Recorrido recorrido) {
+    Connection conn = null;
+    PreparedStatement tabla = null;
+    ResultSet rs = null;
+    try {
+      Class.forName("org.postgresql.Driver");
+      conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
+      tabla = conn.prepareStatement(
+        "INSERT INTO tp.Recorrido(peso, duracion) VALUES (" + recorrido.getPeso() + ", " + recorrido.getDuracion() + ")" +
+        "RETURNING id_recorrido"
+      );
+      rs = tabla.executeQuery();
+      rs.next();
+      int ordenRuta = 0;
+      for(Ruta r : recorrido.getRutas()){
+        tabla.close();
+        tabla = conn.prepareStatement(
+          "INSERT INTO tp.rutas_recorrido(id_recorrido, id_ruta, orden) VALUES" +
+          "(" + rs.getInt("id_recorrido") +  "," + r.getId_ruta() + ", " + ordenRuta + ")"
+        );
+        tabla.executeUpdate();
+        ordenRuta++;
+      }
+      orden.setRecorrido(recorrido);
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (EnumConstantNotPresentException e){
+      e.printStackTrace();
+    } 
+    finally { //Libera los recursos
+      if(rs!=null) try { rs.close(); }
+      catch (SQLException e) { e.printStackTrace(); }
+      if(tabla!=null) try { tabla.close(); }
+      catch (SQLException e) {e.printStackTrace(); }
+      if(conn!=null) try { conn.close(); }
+      catch (SQLException e) { e.printStackTrace(); }
+    }
+  }
+
 }

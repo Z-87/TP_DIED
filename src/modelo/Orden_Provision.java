@@ -16,10 +16,10 @@ public class Orden_Provision {
   private Double tiempoEsperadoHoras;
   private ESTADO_ORDEN estado;
   private ArrayList<Cantidad> productos = new ArrayList<>();
-  private Integer id_recorrido;
+  private Recorrido recorrido;
   
   public Orden_Provision(Integer id, Date fechaDeOrden, Centro_Logistico sucursalDestino, Centro_Logistico sucursalOrigen, Double tiempoEsperadoHoras,
-      ESTADO_ORDEN estado, ArrayList<Cantidad> productos, Integer id_recorrido) {
+      ESTADO_ORDEN estado, ArrayList<Cantidad> productos, Recorrido recorrido) {
     this.id_orden = id;
     this.fechaDeOrden = fechaDeOrden;
     this.sucursalDestino = sucursalDestino;
@@ -27,7 +27,7 @@ public class Orden_Provision {
     this.tiempoEsperadoHoras = tiempoEsperadoHoras;
     this.estado = estado;
     this.productos = productos;
-    this.id_recorrido = id_recorrido;
+    this.recorrido = recorrido;
   }
   
   public void setId_orden(Integer id_orden) {
@@ -100,13 +100,15 @@ public class Orden_Provision {
     this.productos = productos;
   }
 
-  public void setId_recorrido(Integer id_recorrido) {
-    this.id_recorrido = id_recorrido;
+  
+  public Recorrido getRecorrido() {
+    return recorrido;
   }
 
-  public Integer getId_recorrido() {
-    return id_recorrido;
+  public void setRecorrido(Recorrido recorrido) {
+    this.recorrido = recorrido;
   }
+
   public Centro_Logistico getSucursalOrigen() {
     return sucursalOrigen;
   }

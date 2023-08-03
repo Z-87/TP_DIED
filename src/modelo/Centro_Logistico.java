@@ -14,6 +14,10 @@ public abstract class Centro_Logistico {
     protected double pageRank;
 
     
+    @Override
+    public boolean equals(Object obj) {
+      return (obj instanceof Centro_Logistico && ((Centro_Logistico) obj).getId_logistico() == this.id_logistico);
+    }
     public String getNombre() {
         return this.nombre;
     }

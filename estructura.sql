@@ -87,6 +87,8 @@ CREATE TABLE tp.Orden_Provision (
     CONSTRAINT FK_Orden_Provision__Recorrido FOREIGN KEY (id_recorrido) REFERENCES tp.Recorrido (id_recorrido),
     CONSTRAINT PK_Orden_Provision PRIMARY KEY (id_orden)
 );
+ALTER TABLE tp.Orden_Provision ALTER COLUMN sucursal_origen DROP NOT NULL; 
+ALTER TABLE tp.Orden_Provision ALTER COLUMN id_recorrido DROP NOT NULL; 
 
 CREATE TABLE tp.Cantidad (
     id_cantidad serial,

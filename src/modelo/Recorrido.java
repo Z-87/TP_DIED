@@ -30,5 +30,21 @@ public class Recorrido {
   public ArrayList<Ruta> getRutas() {
     return rutas;
   }
+
+  public void setId_recorrido(Integer id_recorrido) {
+    this.id_recorrido = id_recorrido;
+  }
+
+  public void setPeso(Double peso) {
+    this.peso = peso;
+  }
+
+  public void setDuracion(Integer duracion) {
+    this.duracion = duracion;
+  }
+
+  public void setRutas(ArrayList<Ruta> rutas) {
+    this.rutas = rutas;
+  }
   
 }

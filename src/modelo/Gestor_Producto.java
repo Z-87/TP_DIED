@@ -48,7 +48,7 @@ public class Gestor_Producto {
     Connection conn = null;
     PreparedStatement tabla = null;
     ResultSet rs = null;
-    //cuando se elimina un producto hay que eliminar todos los 'Stock' y las 'Orden_Provision' asociados.
+    //[!] cuando se elimina un producto hay que eliminar todos los 'Stock' y las 'Orden_Provision' asociados.
     try {
       Class.forName("org.postgresql.Driver");
       conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
