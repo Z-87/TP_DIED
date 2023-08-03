@@ -95,7 +95,7 @@ public class Gestor_Orden_Provision {
       while(rs.next()) {
 
         Centro_Logistico sucursalDestino = new Sucursal(
-          rs.getString("DestinoS.id_sucursal"), 
+          rs.getInt("DestinoS.id_sucursal"), 
           rs.getString("Destino.nombre"), 
           ESTADO_SUCURSAL.valueOf(rs.getString("Destino.estado")), 
           rs.getString("Destino.horario_apertura"), 
@@ -111,7 +111,7 @@ public class Gestor_Orden_Provision {
         Centro_Logistico sucursalOrigen = null;
         if(rs.getString("Origen.id_logistico") != null) {
           sucursalOrigen = new Sucursal(
-            rs.getString("OrigenS.id_sucursal"), 
+            rs.getInt("OrigenS.id_sucursal"), 
             rs.getString("Origen.nombre"), 
             ESTADO_SUCURSAL.valueOf(rs.getString("Origen.estado")), 
             rs.getString("Origen.horario_apertura"), 
@@ -126,7 +126,7 @@ public class Gestor_Orden_Provision {
         }
 
         ordenes.add(new Orden_Provision(
-          rs.getString("O.id_orden"), 
+          rs.getInt("O.id_orden"), 
           rs.getDate("O.fecha_orden"),
           sucursalDestino, 
           sucursalOrigen,
@@ -158,6 +158,7 @@ public class Gestor_Orden_Provision {
   }  
 
   public ArrayList<Centro_Logistico> listarPosiblesOrigenes(Orden_Provision orden) {
+    ArrayList<Centro_Logistico> resultado = new ArrayList<>();
     Gestor_Stock gestor_stock = new Gestor_Stock();
     ArrayList<Producto> listaProductos = (ArrayList<Producto>)orden.getProductos().stream().map(c -> c.getProducto()).toList();
     try {
@@ -166,7 +167,7 @@ public class Gestor_Orden_Provision {
     } catch (Exception e) {
       // TODO: handle exception
     }
-    
+    return resultado;
   }
 
 }
