@@ -1,6 +1,7 @@
 package GUI;
 
 import modelo.Grafo;
+import modelo.Producto;
 import modelo.Ruta;
 import java.awt.Color;
 //import java.awt.Font;
@@ -442,7 +443,30 @@ public class Display_Consulta_Rutas extends JPanel{
             
         });
         JButton Boton4 = new JButton("Editar Ruta");
-        Boton4.setBackground(Color.RED);
+        Boton4.setBackground(Color.GRAY);
+        Boton4.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if(lista.getSelectedValue() != null){
+                    String valor[] = lista.getSelectedValue().split("      ");
+
+                    for(Ruta p : grafo.getRutas()){
+
+                        if(valor[1].equals(p.getId_ruta().toString())){
+                            ventana.nuevoPanel(new Display_Editar_Ruta(ventana, p));
+                        }
+                        
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Por favor seleccione una ruta", "Producto no seleccionado", JOptionPane.WARNING_MESSAGE);
+                }
+                
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+            }
+            
+        });
         //Implementar Asignacion de recorrido
         control.add(Boton3);
         control.add(Boton4);

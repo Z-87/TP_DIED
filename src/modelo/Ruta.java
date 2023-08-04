@@ -93,7 +93,7 @@ public class Ruta {
 
     public void cargarDuracion(Integer dur){
         this.setDuracion(dur);
-        cargarDatosRuta("capacidad", dur.toString());
+        cargarDatosRuta("duracion", dur.toString());
     }
 
     public void setOperativa(){
@@ -113,7 +113,7 @@ public class Ruta {
             conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
             PreparedStatement tabla;
             System.out.println(newValor);
-            tabla = conn.prepareStatement("UPDATE tp.Ruta SET "+campo+"="+newValor+" WHERE id_logistico='"+this.getId_ruta()+"'");
+            tabla = conn.prepareStatement("UPDATE tp.Ruta SET "+campo+"="+newValor+" WHERE id_ruta='"+this.getId_ruta()+"'");
             tabla.executeUpdate();
         } catch(ClassNotFoundException e){
             e.printStackTrace();

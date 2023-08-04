@@ -74,6 +74,11 @@ public abstract class Centro_Logistico {
         this.cargarDatosSucursal("horario_cierre", "'"+newHorario+"'");
     }
 
+    public void cargarEstado(String estado){
+      this.setEstado(ESTADO_SUCURSAL.valueOf(estado));
+      this.cargarDatosSucursal("estado", "'"+estado+"'");
+    }
+
     public void cargarPageRank(Double pr){
         this.setPageRank(pr);
         this.cargarDatosSucursal("pageRank", pr.toString());
