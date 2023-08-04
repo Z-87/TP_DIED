@@ -56,6 +56,18 @@ public class Display_Rutas extends JPanel{
         });
         JButton Boton2 = new JButton("Alta Ruta");
         Boton2.setBackground(Color.RED);
+        Boton2.addActionListener(new ActionListener() {
+
+          @Override
+          public void actionPerformed(ActionEvent arg0) {
+
+              Display_Alta_Ruta suc = new Display_Alta_Ruta(ventana);
+              ventana.nuevoPanel(suc);
+
+              // throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+          }
+          
+        });
         JButton Boton3 = new JButton("Volver");
         Boton3.setBackground(Color.GRAY);
         Boton3.addActionListener(new ActionListener() {

@@ -50,7 +50,7 @@ public class Display_Alta_Sucursal extends JPanel{
         JLabel labelTipoSucursal = new JLabel("Estado Sucursal");
         labelTipoSucursal.setBackground(Color.BLACK);
         labelTipoSucursal.setForeground(Color.GRAY);
-        JComboBox<String> inputTipoSucursal = new JComboBox<>(("Sucursal, Puerto, Centro").split(","));
+        JComboBox<String> inputTipoSucursal = new JComboBox<>(("Sucursal,Puerto,Centro").split(","));
         inputTipoSucursal.setBackground(Color.BLACK);
         inputTipoSucursal.setForeground(Color.GRAY);
         inputTipoSucursal.setEnabled(true);
@@ -98,7 +98,7 @@ public class Display_Alta_Sucursal extends JPanel{
             @Override
             public void actionPerformed(ActionEvent arg0) {
               Grafo grafo = new Grafo();
-              if(inputTipoSucursal.getSelectedItem() == "Sucursal"){
+              if(inputTipoSucursal.getSelectedItem().equals("Sucursal")){
                 Sucursal nuevaSucursal = new Sucursal(
                   null,
                   inputNombreSucursal.getText(),
@@ -107,7 +107,7 @@ public class Display_Alta_Sucursal extends JPanel{
                   inputHorarioCierre.getText()
                 );
                 grafo.cargarSucursal(nuevaSucursal);
-              }else if(inputTipoSucursal.getSelectedItem() == "Puerto"){
+              }else if(inputTipoSucursal.getSelectedItem().equals("Puerto")){
                 Puerto nuevaSucursal = new Puerto(
                   null,
                   inputNombreSucursal.getText(),
