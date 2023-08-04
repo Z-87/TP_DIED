@@ -53,14 +53,24 @@ public class Display_Sucursales extends JPanel{
                 
                 ventana.nuevoPanel(new Display_Consulta_Sucursales(ventana));
 
-                throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
         });
         JButton Boton2 = new JButton("Alta Sucursal");
-        Boton2.setBackground(Color.GRAY);
+        Boton2.setBackground(Color.RED);
         JButton Boton3 = new JButton("Consultar Ordenes de Provision");
         Boton3.setBackground(Color.GRAY);
+        Boton3.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+
+                ventana.nuevoPanel(new Display_Consulta_OrdenDeProvision(ventana));
+                
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+            }
+            
+        });
         JButton Boton4 = new JButton("Volver");
         Boton4.setBackground(Color.GRAY);
         Boton4.addActionListener(new ActionListener() {
@@ -69,8 +79,8 @@ public class Display_Sucursales extends JPanel{
             public void actionPerformed(ActionEvent arg0) {
 
                 ventana.nuevoPanel(new Display_Principal(ventana));
-
-                throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+                
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
         });

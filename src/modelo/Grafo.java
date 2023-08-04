@@ -72,7 +72,6 @@ public class Grafo {
             while(rs.next()){
                 Sucursal aux2 = new Sucursal();
                 aux2.setId_logistico(rs.getInt("id_logistico"));
-                System.out.println("Sucursal Nro: "+aux2.getId_logistico());
                 aux2.setNombre(rs.getString("nombre"));
                 aux2.setHorario_apertura(rs.getString("horario_apertura"));
                 aux2.setHorario_cierre(rs.getString("horario_cierre"));
@@ -499,16 +498,32 @@ public class Grafo {
         return this.sucursales.stream().filter(a -> id.equals(a.getId_logistico())).collect(Collectors.toList()).get(0);
     }
 
+    public List<Centro_Logistico> filtrarScursal_Id(List<Centro_Logistico> lista, String id){
+        return lista.stream().filter(a -> id.equals(a.getId_logistico().toString())).collect(Collectors.toList());
+    }
+
     public List<Centro_Logistico> consultarScursales_Nombre(String nombre){
         return this.sucursales.stream().filter(a -> nombre.equals(a.getNombre())).collect(Collectors.toList());
+    }
+
+    public List<Centro_Logistico> filtrarScursales_Nombre(List<Centro_Logistico> lista, String nombre){
+        return lista.stream().filter(a -> nombre.equals(a.getNombre())).collect(Collectors.toList());
     }
 
     public List<Centro_Logistico> consultarScursales_HorarioApertura(String h){
         return this.sucursales.stream().filter(a -> h.equals(a.getHorario_apertura())).collect(Collectors.toList());
     }
 
+    public List<Centro_Logistico> filtrarScursales_HorarioApertura(List<Centro_Logistico> lista, String h){
+        return lista.stream().filter(a -> h.equals(a.getHorario_apertura())).collect(Collectors.toList());
+    }
+
     public List<Centro_Logistico> consultarScursales_HorarioCierre(String h){
         return this.sucursales.stream().filter(a -> h.equals(a.getHorario_cierre())).collect(Collectors.toList());
+    }
+
+    public List<Centro_Logistico> filtrarScursales_HorarioCierre(List<Centro_Logistico> lista, String h){
+        return lista.stream().filter(a -> h.equals(a.getHorario_cierre())).collect(Collectors.toList());
     }
 
     public List<Centro_Logistico> consultarScursales_pageRank(double pr){
@@ -519,9 +534,19 @@ public class Grafo {
         return this.sucursales.stream().filter(a -> ESTADO_SUCURSAL.OPERATIVA.equals(a.getEstado())).collect(Collectors.toList());
     }
 
+    public List<Centro_Logistico> filtrarScursales_Operativas(List<Centro_Logistico> lista){
+        return lista.stream().filter(a -> ESTADO_SUCURSAL.OPERATIVA.equals(a.getEstado())).collect(Collectors.toList());
+    }
+
     public List<Centro_Logistico> consultarScursales_NoOperativas(){
         return this.sucursales.stream().filter(a -> ESTADO_SUCURSAL.NO_OPERATIVA.equals(a.getEstado())).collect(Collectors.toList());
     }
+
+    public List<Centro_Logistico> filtrarScursales_NoOperativas(List<Centro_Logistico> lista){
+        return this.sucursales.stream().filter(a -> ESTADO_SUCURSAL.NO_OPERATIVA.equals(a.getEstado())).collect(Collectors.toList());
+    }
+
+    
 
 //GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS
 //GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS//GESTION_RUTAS
@@ -552,10 +577,7 @@ public class Grafo {
                 Ruta aux = new Ruta();
                 aux.setId_ruta(rs.getInt("id_ruta"));
                 Integer aux1=rs.getInt("sucursal_origen");
-                System.out.print("aux1: "+aux1);
                 Integer aux2=rs.getInt("sucursal_destino");
-                System.out.print("--aux2: "+aux2);
-                System.out.println("");
                 aux.setSucursal_Origen((this.sucursales.stream()
                                                         .filter(a -> (aux1 == a.getId_logistico()))
                                                         .collect(Collectors.toList())).get(0));
@@ -642,44 +664,88 @@ public class Grafo {
         return this.rutas.stream().filter(a -> id.equals(a.getId_ruta())).collect(Collectors.toList()).get(0);
     }
 
+    public List<Ruta> filtrarRuta_Id(List<Ruta> lista, Integer id){
+        return lista.stream().filter(a -> id.equals(a.getId_ruta())).collect(Collectors.toList());
+    }
+
     public List<Ruta> consultarRutas_sucursalOrigen(Centro_Logistico s){
         return this.rutas.stream().filter(a -> s.equals(a.getSucursal_Origen())).collect(Collectors.toList());
+    }
+
+    public List<Ruta> filtrarRutas_sucursalOrigen(List<Ruta> lista, Centro_Logistico s){
+        return lista.stream().filter(a -> s.equals(a.getSucursal_Origen())).collect(Collectors.toList());
     }
 
     public List<Ruta> consultarRutas_sucursalDestino(Centro_Logistico s){
         return this.rutas.stream().filter(a -> s.equals(a.getSucursal_Destino())).collect(Collectors.toList());
     }
 
+    public List<Ruta> filtrarRutas_sucursalDestino(List<Ruta> lista, Centro_Logistico s){
+        return lista.stream().filter(a -> s.equals(a.getSucursal_Destino())).collect(Collectors.toList());
+    }
+
     public List<Ruta> consultarRutas_capacidadExacta(double cap){
         return this.rutas.stream().filter(a -> a.getCapacidad() == cap).collect(Collectors.toList());
+    }
+
+    public List<Ruta> filtrarRutas_capacidadExacta(List<Ruta> lista, double cap){
+        return lista.stream().filter(a -> a.getCapacidad() == cap).collect(Collectors.toList());
     }
 
     public List<Ruta> consultarRutas_capacidadMayorIgual(double cap){
         return this.rutas.stream().filter(a -> a.getCapacidad() >= cap).collect(Collectors.toList());
     }
 
+    public List<Ruta> filtrarRutas_capacidadMayorIgual(List<Ruta> lista, double cap){
+        return lista.stream().filter(a -> a.getCapacidad() >= cap).collect(Collectors.toList());
+    }
+
     public List<Ruta> consultarRutas_capacidadMenor(double cap){
         return this.rutas.stream().filter(a -> a.getCapacidad() < cap).collect(Collectors.toList());
+    }
+
+    public List<Ruta> filtrarRutas_capacidadMenor(List<Ruta> lista, double cap){
+        return lista.stream().filter(a -> a.getCapacidad() < cap).collect(Collectors.toList());
     }
 
     public List<Ruta> consultarRutas_duracionExacta(double dur){
         return this.rutas.stream().filter(a -> a.getDuracion() == dur).collect(Collectors.toList());
     }
 
+    public List<Ruta> filtrarRutas_duracionExacta(List<Ruta> lista, double dur){
+        return lista.stream().filter(a -> a.getDuracion() == dur).collect(Collectors.toList());
+    }
+
     public List<Ruta> consultarRutas_duracionMayorIgual(double dur){
         return this.rutas.stream().filter(a -> a.getDuracion() >= dur).collect(Collectors.toList());
+    }
+
+    public List<Ruta> filtrarRutas_duracionMayorIgual(List<Ruta> lista, double dur){
+        return lista.stream().filter(a -> a.getDuracion() >= dur).collect(Collectors.toList());
     }
 
     public List<Ruta> consultarRutas_duracionMenor(double dur){
         return this.rutas.stream().filter(a -> a.getDuracion() < dur).collect(Collectors.toList());
     }
 
+    public List<Ruta> filtrarRutas_duracionMenor(List<Ruta> lista, double dur){
+        return lista.stream().filter(a -> a.getDuracion() < dur).collect(Collectors.toList());
+    }
+
     public List<Ruta> consultarRutas_Operativas(){
         return this.rutas.stream().filter(a -> ESTADO_RUTA.OPERATIVA.equals(a.getEstado())).collect(Collectors.toList());
     }
 
+    public List<Ruta> filtrarRutas_Operativas(List<Ruta> lista){
+        return lista.stream().filter(a -> ESTADO_RUTA.OPERATIVA.equals(a.getEstado())).collect(Collectors.toList());
+    }
+
     public List<Ruta> consultarRutas_NoOperativas(){
         return this.rutas.stream().filter(a -> ESTADO_RUTA.NO_OPERATIVA.equals(a.getEstado())).collect(Collectors.toList());
+    }
+
+    public List<Ruta> filtrarRutas_NoOperativas(List<Ruta> lista){
+        return lista.stream().filter(a -> ESTADO_RUTA.NO_OPERATIVA.equals(a.getEstado())).collect(Collectors.toList());
     }
 
     //REVISAR SI DEBE QUEDARSE

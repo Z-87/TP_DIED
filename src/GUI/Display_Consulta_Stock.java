@@ -25,14 +25,14 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-public class Display_Consulta_Sucursales extends JPanel{
+public class Display_Consulta_Stock extends JPanel{
     JPanel listado;
     JPanel botones;
     GridBagConstraints con;
     Grafo grafo;
     Ventana ventana;
 
-    public Display_Consulta_Sucursales(Ventana ventana){
+    public Display_Consulta_Stock(Ventana ventana){
         this.ventana=ventana;
         this.setBackground(Color.BLACK);
         this.setLayout(new GridBagLayout());
@@ -42,19 +42,19 @@ public class Display_Consulta_Sucursales extends JPanel{
         this.grafo = new Grafo();
         //g.cargarSucursales();
         String arreglo[] = this.obtenerArreglo(grafo.getSucursales());
-        this.listado = cargarLista(arreglo);
+        //this.listado = cargarLista(arreglo);
+        this.listado = cargarLista();
         restricciones(1, 0, 1, 1, 0.65, 1.0, GridBagConstraints.BOTH);
         this.add(listado, this.con);
-
+        
         this.botones = new JPanel();
         botones.setBackground(Color.BLACK);
-        botones.setLayout(new GridLayout(6,1));
-
+        botones.setLayout(new GridLayout(5,1));
 
         JPanel pan1 = new JPanel();
         pan1.setBackground(Color.BLACK);
         pan1.setLayout(new GridLayout(2,1));
-        JLabel texto1 = new JLabel("Nombre Sucursales");
+        JLabel texto1 = new JLabel("Producto");
         texto1.setBackground(Color.BLACK);
         texto1.setForeground(Color.GRAY);
         JTextField campo1 = new JTextField();
@@ -67,7 +67,7 @@ public class Display_Consulta_Sucursales extends JPanel{
         JPanel pan2 = new JPanel();
         pan2.setBackground(Color.BLACK);
         pan2.setLayout(new GridLayout(2,1));
-        JLabel texto2 = new JLabel("Horario Apertura");
+        JLabel texto2 = new JLabel("Cantidad");
         texto2.setBackground(Color.BLACK);
         texto2.setForeground(Color.GRAY);
         JTextField campo2 = new JTextField();
@@ -76,59 +76,17 @@ public class Display_Consulta_Sucursales extends JPanel{
         campo2.setEnabled(true);
         pan2.add(texto2);
         pan2.add(campo2);
-
-        JPanel pan3 = new JPanel();
-        pan3.setBackground(Color.BLACK);
-        pan3.setLayout(new GridLayout(2,1));
-        JLabel texto3 = new JLabel("Horario Cierre");
-        texto3.setBackground(Color.BLACK);
-        texto3.setForeground(Color.GRAY);
-        JTextField campo3 = new JTextField();
-        campo3.setBackground(Color.BLACK);
-        campo3.setForeground(Color.GRAY);
-        campo3.setEnabled(true);
-        pan3.add(texto3);
-        pan3.add(campo3);
-        /*
-        JPanel pan4 = new JPanel();
-        pan4.setBackground(Color.BLACK);
-        pan4.setLayout(new GridLayout(3,1));
-        JLabel texto4 = new JLabel("Flujo Maximo desde Puerto");
-        texto4.setBackground(Color.BLACK);
-        texto4.setForeground(Color.GRAY);
-        JTextField campo4 = new JTextField();
-        campo4.setBackground(Color.BLACK);
-        campo4.setForeground(Color.GRAY);
-        campo4.setEnabled(true);
-        JPanel pan4_1 = new JPanel();
-        pan4_1.setBackground(Color.BLACK);
-        pan4_1.setLayout(new GridLayout(1,3));
-        JRadioButton radBoton1 = new JRadioButton("Mayor a");
-        radBoton1.setBackground(Color.BLACK);
-        radBoton1.setForeground(Color.GRAY);
-        JRadioButton radBoton2 = new JRadioButton("Menor a");
-        radBoton2.setForeground(Color.GRAY);
-        radBoton2.setBackground(Color.BLACK);
-        JRadioButton radBoton3 = new JRadioButton("Igual a");
-        radBoton3.setForeground(Color.GRAY);
-        radBoton3.setBackground(Color.BLACK);
-        pan4_1.add(radBoton1);
-        pan4_1.add(radBoton2);
-        pan4_1.add(radBoton3);
-        pan4.add(texto4);
-        pan4.add(campo4);
-        pan4.add(pan4_1);
-        */
+        
         JPanel pan5 = new JPanel();
         pan5.setBackground(Color.BLACK);
         pan5.setLayout(new GridLayout(3,1));
-        JLabel texto5 = new JLabel("Estado Sucursal");
+        JLabel texto5 = new JLabel("Unidad");
         texto5.setBackground(Color.BLACK);
         texto5.setForeground(Color.GRAY);
-        JCheckBox check1 = new JCheckBox("Operativas");
+        JCheckBox check1 = new JCheckBox("Kilogramos");
         check1.setBackground(Color.BLACK);
         check1.setForeground(Color.GRAY);
-        JCheckBox check2 = new JCheckBox("No Operativas");
+        JCheckBox check2 = new JCheckBox("Unidades");
         check2.setBackground(Color.BLACK);
         check2.setForeground(Color.GRAY);
         check1.addActionListener(new ActionListener() {
@@ -163,18 +121,11 @@ public class Display_Consulta_Sucursales extends JPanel{
         Boton1.addActionListener(new ActionListener() {
             
             public void actionPerformed(ActionEvent arg0) {
+                /*
                 List<Centro_Logistico> a = grafo.getSucursales();
                 if(campo1.getText() != null){
                     String cam = campo1.getText();
                     a = grafo.filtrarScursales_Nombre(a, cam);
-                }
-                if(campo2.getText() != null){
-                    String cam = campo2.getText();
-                    a = grafo.filtrarScursales_HorarioApertura(a, cam);
-                }
-                if(campo3.getText() != null){
-                    String cam = campo3.getText();
-                    a = grafo.filtrarScursales_HorarioCierre(a, cam);
                 }
                 if(check1.isSelected() && !check2.isEnabled()){
                     a = grafo.filtrarScursales_Operativas(a);
@@ -183,7 +134,7 @@ public class Display_Consulta_Sucursales extends JPanel{
                     a = grafo.filtrarScursales_NoOperativas(a);
                 }
                 reCargarLista(obtenerArreglo(a));
-                
+                */
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
@@ -196,7 +147,7 @@ public class Display_Consulta_Sucursales extends JPanel{
             @Override
             public void actionPerformed(ActionEvent arg0) {
 
-                ventana.nuevoPanel(new Display_Sucursales(ventana));
+                ventana.nuevoPanel(new Display_Consulta_Sucursales(ventana));
 
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
@@ -205,58 +156,59 @@ public class Display_Consulta_Sucursales extends JPanel{
 
         botones.add(pan1);
         botones.add(pan2);
-        botones.add(pan3);
         botones.add(pan5);
-        //botones.add(pan4);
         botones.add(Boton1);
         botones.add(Boton2);
         restricciones(0, 0, 1, 1, 0.25, 1.0, GridBagConstraints.BOTH);
         this.add(botones, this.con);
     }
 
-    private void reCargarLista(String arreglo[]){
+    //private void reCargarLista(String arreglo[]){
+    private void reCargarLista(){
         this.listado.removeAll();
         restricciones(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.BOTH);
-        this.listado.add(cargarLista(arreglo), this.con);
+        //this.listado.add(cargarLista(arreglo), this.con);
+        this.listado.add(cargarLista(), this.con);
         this.listado.repaint();
         this.listado.validate();
     }
 
-    private JPanel cargarLista(String arreglo[]){
+    //private JPanel cargarLista(String arreglo[]){
+    private JPanel cargarLista(){
         restricciones(0, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
         JPanel lis = new JPanel();
         lis.setLayout(new GridBagLayout());
         lis.setBackground(Color.BLACK);
 
         JList<String> lista = new JList<>();
-        lista.setListData(arreglo);
+        //lista.setListData(arreglo);
         lista.setBackground(Color.BLACK);
         lista.setForeground(Color.CYAN);
         lista.setVisibleRowCount(10);
         lista.setFixedCellHeight(50);
         JScrollPane scroll = new JScrollPane(lista);
         scroll.setBackground(Color.BLACK);
-        restricciones(0, 1, 7, 1, 1.0, 0.95, GridBagConstraints.BOTH);
+        restricciones(0, 1, 3, 1, 1.0, 0.95, GridBagConstraints.BOTH);
         lis.add(scroll, this.con);
         
-        JLabel id = new JLabel(" Id ");
+        JLabel id = new JLabel(" Producto ");
         id.setBackground(Color.BLACK);
         id.setForeground(Color.GRAY);
         restricciones(0, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
         lis.add(id, this.con);
 
-        JLabel nombre = new JLabel(" Nombre ");
+        JLabel nombre = new JLabel(" Cantidad ");
         nombre.setBackground(Color.BLACK);
         nombre.setForeground(Color.GRAY);
         restricciones(1, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
         lis.add(nombre, this.con);
 
-        JLabel hapertura = new JLabel(" Horario Apertura ");
+        JLabel hapertura = new JLabel(" Unidad ");
         hapertura.setBackground(Color.BLACK);
         hapertura.setForeground(Color.GRAY);
         restricciones(2, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
         lis.add(hapertura, this.con);
-
+        /*
         JLabel hcierre = new JLabel(" Horario Cierre ");
         hcierre.setBackground(Color.BLACK);
         hcierre.setForeground(Color.GRAY);
@@ -280,9 +232,9 @@ public class Display_Consulta_Sucursales extends JPanel{
         flujoMaximo.setForeground(Color.GRAY);
         restricciones(6, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
         lis.add(flujoMaximo, this.con);
-
+        */
         JPanel control = new JPanel();
-        control.setLayout(new GridLayout(4,1));
+        control.setLayout(new GridLayout(3,1));
         JButton Boton3 = new JButton("Dar de Baja");
         Boton3.setBackground(Color.GRAY);
         Boton3.setEnabled(true);
@@ -290,7 +242,7 @@ public class Display_Consulta_Sucursales extends JPanel{
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                
+                /*
                 if(lista.getSelectedValue() != null){
                     String valor[] = lista.getSelectedValue().split("      ");
 
@@ -307,35 +259,22 @@ public class Display_Consulta_Sucursales extends JPanel{
                     }
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, "por favor seleccione una sucursal", "Sucursal no seleccionada", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "por favor seleccione un Stock", "Stock no seleccionado", JOptionPane.WARNING_MESSAGE);
                 }
+                */
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
         });
-        JButton Boton4 = new JButton("Editar Sucursal");
+        JButton Boton4 = new JButton("Edtar Stock");
         Boton4.setBackground(Color.GRAY);
-        //Implementar la misma panel que el que se uso para el alta de sucursales
-        JButton Boton5 = new JButton("Generar Orden de Provision");
+        //Implementar edicion de Stock
+        JButton Boton5 = new JButton("Alta Stock");
         Boton5.setBackground(Color.GRAY);
-        JButton Boton6 = new JButton("Consultar Stock");
-        Boton6.setBackground(Color.GRAY);
-        Boton6.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                
-                ventana.nuevoPanel(new Display_Consulta_Stock(ventana)); 
-
-                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
-            }
-            
-        });
-        //Implementar consultar Stock
+        //Implementar edicion de Stock
         control.add(Boton3);
         control.add(Boton4);
         control.add(Boton5);
-        control.add(Boton6);
         restricciones(3, 0, 1, 1, 0.10, 1.0, GridBagConstraints.BOTH);
         this.add(control,con);
 

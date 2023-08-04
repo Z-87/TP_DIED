@@ -44,8 +44,18 @@ public class Display_Rutas extends JPanel{
         pan1.setLayout(new GridLayout(0,1));
         JButton Boton1 = new JButton("Consultar Ruta");
         Boton1.setBackground(Color.GRAY);
+        Boton1.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+                
+                ventana.nuevoPanel(new Display_Consulta_Rutas(ventana));
+
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+            }
+            
+        });
         JButton Boton2 = new JButton("Alta Ruta");
-        Boton2.setBackground(Color.GRAY);
+        Boton2.setBackground(Color.RED);
         JButton Boton3 = new JButton("Volver");
         Boton3.setBackground(Color.GRAY);
         Boton3.addActionListener(new ActionListener() {
@@ -55,7 +65,7 @@ public class Display_Rutas extends JPanel{
 
                 ventana.nuevoPanel(new Display_Principal(ventana));
 
-                throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
         });

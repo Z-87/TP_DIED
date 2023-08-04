@@ -62,7 +62,7 @@ public class Display_Principal extends JPanel{
                 Display_Sucursales suc = new Display_Sucursales(ventana);
                 ventana.nuevoPanel(suc);
 
-                throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
         });
@@ -89,7 +89,7 @@ public class Display_Principal extends JPanel{
                 Display_Rutas suc = new Display_Rutas(ventana);
                 ventana.nuevoPanel(suc);
 
-                throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
         });
@@ -115,7 +115,7 @@ public class Display_Principal extends JPanel{
                 Display_Productos suc = new Display_Productos(ventana);
                 ventana.nuevoPanel(suc);
 
-                throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
         });
