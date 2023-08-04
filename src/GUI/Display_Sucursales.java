@@ -58,7 +58,19 @@ public class Display_Sucursales extends JPanel{
             
         });
         JButton Boton2 = new JButton("Alta Sucursal");
-        Boton2.setBackground(Color.RED);
+        Boton2.setBackground(Color.GRAY);
+        Boton2.addActionListener(new ActionListener() {
+
+          @Override
+          public void actionPerformed(ActionEvent arg0) {
+
+              Display_Alta_Sucursal suc = new Display_Alta_Sucursal(ventana);
+              ventana.nuevoPanel(suc);
+
+              // throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+          }
+          
+      });
         JButton Boton3 = new JButton("Consultar Ordenes de Provision");
         Boton3.setBackground(Color.GRAY);
         Boton3.addActionListener(new ActionListener() {
