@@ -50,9 +50,8 @@ public class Display_Sucursales extends JPanel{
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-
-                Display_Consulta_Sucursales suc = new Display_Consulta_Sucursales(ventana);
-                ventana.nuevoPanel(suc);
+                
+                ventana.nuevoPanel(new Display_Consulta_Sucursales(ventana));
 
                 throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }

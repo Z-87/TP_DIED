@@ -23,8 +23,8 @@ public class Ventana extends JFrame{
     public void nuevoPanel(JPanel nuevo){
         GridBagConstraints con = new GridBagConstraints();
         con.fill = GridBagConstraints.BOTH;
-        con.weightx = 1;
-        con.weighty = 1;
+        con.weightx = 1.0;
+        con.weighty = 1.0;
         con.gridx = 0;
         con.gridy = 0;
         con.gridwidth = 1;

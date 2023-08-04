@@ -32,6 +32,19 @@ public class Grafo {
       return sucursales;
     }
 
+    public void eliminarCentroLogistico(Centro_Logistico elim){
+        if(elim instanceof Sucursal){
+            this.eliminarSucursal((Sucursal)elim);
+        }
+        else if(elim instanceof Puerto){
+            this.eliminarPuerto((Puerto)elim);
+        }
+        else if(elim instanceof Centro){
+            this.eliminarCentro((Centro)elim);
+        }
+        
+    }
+
     public void cargarSucursales(){
         Connection conn = null;
         PreparedStatement tabla = null;
@@ -59,6 +72,7 @@ public class Grafo {
             while(rs.next()){
                 Sucursal aux2 = new Sucursal();
                 aux2.setId_logistico(rs.getInt("id_logistico"));
+                System.out.println("Sucursal Nro: "+aux2.getId_logistico());
                 aux2.setNombre(rs.getString("nombre"));
                 aux2.setHorario_apertura(rs.getString("horario_apertura"));
                 aux2.setHorario_cierre(rs.getString("horario_cierre"));
@@ -295,13 +309,14 @@ public class Grafo {
         int nivel = 0, cont=0, camin=0;
         ArrayList<Integer> arr = new ArrayList<Integer>();
         pendientes.push(origen);
+        arr.add(nivel, 0);
 
         while(!pendientes.isEmpty()){
             if(volver){
                 Centro_Logistico actual = pendientes.pop();
                 adyacentes = this.getAdyacentes(actual);
                 paso.push(actual);
-                arr.add(nivel, 0);
+                arr.add(nivel+1,0);
                 cont=0;
                 if(actual.equals(destino)){
                     ArrayList<Centro_Logistico> camino = new ArrayList<>();
@@ -310,32 +325,33 @@ public class Grafo {
                         camino.add(f);
                     }
                     caminos.add(camin, camino);
-                    //System.out.println("");
-                    paso.pop();
-                    //arr.set(nivel-1, 0);
-                    //nivel--;
-                    arr.set(nivel-1, arr.get(nivel-1)-1);
                     volver = false;
                     camin++;
                 }
-                else if(!adyacentes.isEmpty() && volver){
+                else{
+                    if(!adyacentes.isEmpty()){
                     for(Centro_Logistico v : adyacentes){
                         pendientes.push(v);
                         cont++;
-                        arr.set(nivel, cont);
                     }
                     nivel++;
+                    arr.set(nivel, cont);
+                    }
+                    else{
+                        volver=false;
+                    }
                 }
-
             }
             else{
-                if(arr.get(nivel-1) > 0){
+
+                if(arr.get(nivel+1) > 0){
                     volver = true;
+                    nivel++;
                 }
                 else{
                     paso.pop();
+                    arr.set(nivel, arr.get(nivel)-1);
                     nivel--;
-                    arr.set(nivel-1, arr.get(nivel-1)-1);
                 }
             }
         }
@@ -536,12 +552,15 @@ public class Grafo {
                 Ruta aux = new Ruta();
                 aux.setId_ruta(rs.getInt("id_ruta"));
                 Integer aux1=rs.getInt("sucursal_origen");
+                System.out.print("aux1: "+aux1);
                 Integer aux2=rs.getInt("sucursal_destino");
+                System.out.print("--aux2: "+aux2);
+                System.out.println("");
                 aux.setSucursal_Origen((this.sucursales.stream()
-                                                        .filter(a -> (aux1.equals(a.getId_logistico())))
+                                                        .filter(a -> (aux1 == a.getId_logistico()))
                                                         .collect(Collectors.toList())).get(0));
                 aux.setSucursal_Destino((this.sucursales.stream()
-                                                        .filter(a -> (aux2.equals(a.getId_logistico())))
+                                                        .filter(p -> (aux2 == p.getId_logistico()))
                                                         .collect(Collectors.toList())).get(0));
                 aux.setEstado(ESTADO_RUTA.valueOf(rs.getString("estado")));
                 aux.setCapacidad(rs.getDouble("capacidad"));
@@ -681,30 +700,30 @@ public class Grafo {
         //Usamos recorrido en profundidad
         boolean volver = true;
         List<Centro_Logistico> adyacentes;
-        //ArrayList<ArrayList<Centro_Logistico>> caminos = new ArrayList<ArrayList<Centro_Logistico>>();
+        ArrayList<ArrayList<Centro_Logistico>> caminos = new ArrayList<ArrayList<Centro_Logistico>>();
         Stack<Centro_Logistico> paso = new Stack<>();
+        Stack<Centro_Logistico> pendientes = new Stack<Centro_Logistico>();
 
         List<Ruta> rutasAdyacentes;
         ArrayList<ArrayList<Ruta>> rutas = new ArrayList<ArrayList<Ruta>>();
         Stack<Ruta> pasoR = new Stack<>();
-
         Stack<Ruta> rutasPendientes = new Stack<Ruta>();
 
-        Stack<Centro_Logistico> pendientes = new Stack<Centro_Logistico>();
         int nivel = 0, cont=0, camin=0;
         ArrayList<Integer> arr = new ArrayList<Integer>();
         pendientes.push(origen);
         rutasPendientes.push(null);
 
+        arr.add(nivel, 0);
         while(!pendientes.isEmpty()){
             if(volver){
                 Centro_Logistico actual = pendientes.pop();
-                Ruta rutaActual = rutasPendientes.pop();
                 adyacentes = this.getAdyacentes(actual);
+                Ruta rutaActual = rutasPendientes.pop();
                 rutasAdyacentes = this.getRutasAdyacentes(actual);
-                paso.push(actual);
                 pasoR.push(rutaActual);
-                arr.add(nivel, 0);
+                paso.push(actual);
+                arr.add(nivel+1,0);
                 cont=0;
                 if(actual.equals(destino)){
                     ArrayList<Ruta> ruta = new ArrayList<>();
@@ -715,42 +734,43 @@ public class Grafo {
                         r++;
                     }
                     rutas.add(camin, ruta);
-                    //System.out.println("");
-                    paso.pop();
-                    pasoR.pop();
-                    //arr.set(nivel-1, 0);
-                    //nivel--;
-                    arr.set(nivel-1, arr.get(nivel-1)-1);
                     volver = false;
                     camin++;
                 }
-                else if(!adyacentes.isEmpty() && volver){
+                else{
+                    if(!adyacentes.isEmpty()){
                     for(Centro_Logistico v : adyacentes){
                         pendientes.push(v);
                         cont++;
-                        arr.set(nivel, cont);
                     }
                     for(Ruta b : rutasAdyacentes){
                         rutasPendientes.push(b);
                     }
                     nivel++;
+                    arr.set(nivel, cont);
+                    }
+                    else{
+                        volver=false;
+                    }
                 }
-
             }
             else{
-                if(arr.get(nivel-1) > 0){
+
+                if(arr.get(nivel+1) > 0){
                     volver = true;
+                    nivel++;
                 }
                 else{
                     paso.pop();
                     pasoR.pop();
+                    arr.set(nivel, arr.get(nivel)-1);
                     nivel--;
-                    arr.set(nivel-1, arr.get(nivel-1)-1);
                 }
             }
         }
         return rutas;
     }
+    
     public Grafo() {
       this.cargarSucursales();
       this.cargarRutas();
