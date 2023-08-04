@@ -116,7 +116,7 @@ public class Display_Consulta_Stock extends JPanel{
         pan5.add(check2);
 
         JButton Boton1 = new JButton("Filtrar");
-        Boton1.setBackground(Color.GRAY);
+        Boton1.setBackground(Color.RED);
         Boton1.setEnabled(true);
         Boton1.addActionListener(new ActionListener() {
             
@@ -236,7 +236,7 @@ public class Display_Consulta_Stock extends JPanel{
         JPanel control = new JPanel();
         control.setLayout(new GridLayout(3,1));
         JButton Boton3 = new JButton("Dar de Baja");
-        Boton3.setBackground(Color.GRAY);
+        Boton3.setBackground(Color.RED);
         Boton3.setEnabled(true);
         Boton3.addActionListener(new ActionListener() {
 
@@ -267,10 +267,10 @@ public class Display_Consulta_Stock extends JPanel{
             
         });
         JButton Boton4 = new JButton("Edtar Stock");
-        Boton4.setBackground(Color.GRAY);
+        Boton4.setBackground(Color.RED);
         //Implementar edicion de Stock
         JButton Boton5 = new JButton("Alta Stock");
-        Boton5.setBackground(Color.GRAY);
+        Boton5.setBackground(Color.RED);
         //Implementar edicion de Stock
         control.add(Boton3);
         control.add(Boton4);
