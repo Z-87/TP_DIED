@@ -6,8 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.swing.JOptionPane;
 
 import exceptions.OrdenesNoEncontradasException;
 import exceptions.StockNoEncontradoException;
@@ -257,4 +259,22 @@ public class Gestor_Orden_Provision {
     }
   }
 
+  public List<Orden_Provision> consultarOrden_Provision_EstadoEnProceso(ArrayList<Orden_Provision> ordenes){
+    return ordenes.stream().filter(a -> ESTADO_ORDEN.EN_PROCESO == a.getEstado()).collect(Collectors.toList());
+  }
+
+  public List<Orden_Provision> consultarOrden_Provision_EstadoPendiente(ArrayList<Orden_Provision> ordenes){
+    return ordenes.stream().filter(a -> ESTADO_ORDEN.PENDIENTE == a.getEstado()).collect(Collectors.toList());
+  }
+
+  public ArrayList<ArrayList<Ruta>> posiblesCaminos(Orden_Provision orden){
+    ArrayList<ArrayList<Ruta>> aux = new ArrayList<ArrayList<Ruta>>();
+      Grafo grafo = new Grafo();
+      for(Centro_Logistico posible : this.listarPosiblesOrigenes(orden)){
+          for(ArrayList<Ruta> aux2 : grafo.obtenerRutas(posible, orden.getSucursalDestino())){
+              aux.add(aux2);
+          }
+      }
+    return aux;
+  }
 }

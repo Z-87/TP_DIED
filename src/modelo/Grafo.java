@@ -386,6 +386,45 @@ public class Grafo {
         return maximoFlujo;
     }
 
+    public double flujoMaximo(Centro_Logistico c){
+        double maximoFlujo = 0;
+        for(Centro_Logistico a : (sucursales.stream().filter(d -> d instanceof Puerto).collect(Collectors.toList())))
+            for(ArrayList<Ruta> f : this.obtenerRutas(a, c)){
+                maximoFlujo = f.get(0).getCapacidad();
+                for(int i=0; i < f.size()-1; i++){
+                    double cap = f.get(i).getCapacidad();
+                    if(cap < maximoFlujo){
+                        maximoFlujo = cap;
+                    }
+                }
+        }
+        return maximoFlujo;
+    }
+
+    public double flujoMaximo(Centro_Logistico r, Centro_Logistico c){
+        double maximoFlujo = 0;
+        for(ArrayList<Ruta> f : this.obtenerRutas(r, c)){
+            maximoFlujo = f.get(0).getCapacidad();
+            for(Ruta k : f){
+                double cap = k.getCapacidad();
+                if(cap < maximoFlujo){
+                    maximoFlujo = cap;
+                }
+            }
+        }
+        return maximoFlujo;
+    }
+
+    public Integer demoraTotal(Centro_Logistico r, Centro_Logistico c){
+        Integer demoraTotal = 0;
+        for(ArrayList<Ruta> f : this.obtenerRutas(r, c)){
+            for(Ruta k : f){
+                demoraTotal = demoraTotal+k.getDuracion();
+            }
+        }
+        return demoraTotal;
+    }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///                                                                                                                             ///
 ///     Codigo obtenido con ayuda de chatGPT y adaptado por nosotros para el calculo del Page Rank de todas las sucursales      ///

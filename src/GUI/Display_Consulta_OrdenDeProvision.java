@@ -1,14 +1,13 @@
 package GUI;
 
-import modelo.Grafo;
-import modelo.Puerto;
-import modelo.Centro_Logistico;
+import modelo.Orden_Provision;
+import modelo.Gestor_Orden_Provision;
+
 import java.awt.Color;
 //import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-//import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -16,34 +15,39 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+
+import exceptions.OrdenesNoEncontradasException;
 
 public class Display_Consulta_OrdenDeProvision extends JPanel{
-    JPanel listado;
-    JPanel botones;
-    GridBagConstraints con;
-    Grafo grafo;
-    Ventana ventana;
+    private JPanel listado;
+    private JPanel botones;
+    private GridBagConstraints con;
+    private Gestor_Orden_Provision gestor;
+    private ArrayList<Orden_Provision> ordenes;
+    private Ventana ventana;
 
     public Display_Consulta_OrdenDeProvision(Ventana ventana){
         this.ventana=ventana;
+        this.ordenes = new ArrayList<Orden_Provision>();
         this.setBackground(Color.BLACK);
         this.setLayout(new GridBagLayout());
         this.con = new GridBagConstraints();
         //Font txbotones = new Font("Texto de Botones", ALLBITS, 30);
 
-        this.grafo = new Grafo();
+        this.gestor = new Gestor_Orden_Provision();
         //g.cargarSucursales();
-        String arreglo[] = this.obtenerArreglo(grafo.getSucursales());
-        //this.listado = cargarLista(arreglo);
-        this.listado = cargarLista();
+        try{
+            ordenes = gestor.listarOrdenes();
+            String arreglo[] = this.obtenerArreglo(ordenes);
+            this.listado = cargarLista(arreglo);
+        } catch(OrdenesNoEncontradasException e){
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error al Obtener Ordenes", JOptionPane.ERROR_MESSAGE);
+        }
         restricciones(1, 0, 1, 1, 0.65, 1.0, GridBagConstraints.BOTH);
         this.add(listado, this.con);
         
@@ -67,8 +71,7 @@ public class Display_Consulta_OrdenDeProvision extends JPanel{
 
             public void actionPerformed(ActionEvent arg0) {
                 
-                if(check1.isSelected()) check2.setEnabled(false);
-                else check2.setEnabled(true);
+                if(check1.isSelected()) check2.setSelected(false);
 
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
@@ -78,8 +81,7 @@ public class Display_Consulta_OrdenDeProvision extends JPanel{
 
             public void actionPerformed(ActionEvent arg0) {
                 
-                if(check2.isSelected()) check1.setEnabled(false);
-                else check1.setEnabled(true);
+                if(check2.isSelected()) check1.setSelected(false);
 
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
@@ -95,20 +97,17 @@ public class Display_Consulta_OrdenDeProvision extends JPanel{
         Boton1.addActionListener(new ActionListener() {
             
             public void actionPerformed(ActionEvent arg0) {
-                /*
-                List<Centro_Logistico> a = grafo.getSucursales();
-                if(campo1.getText() != null){
-                    String cam = campo1.getText();
-                    a = grafo.filtrarScursales_Nombre(a, cam);
+                
+                if(check1.isSelected()){
+                    reCargarLista(obtenerArreglo(gestor.consultarOrden_Provision_EstadoPendiente(ordenes)));
                 }
-                if(check1.isSelected() && !check2.isEnabled()){
-                    a = grafo.filtrarScursales_Operativas(a);
+                else if(check2.isSelected()){
+                    reCargarLista(obtenerArreglo(gestor.consultarOrden_Provision_EstadoEnProceso(ordenes)));
                 }
-                if(check2.isSelected() && !check1.isEnabled()){
-                    a = grafo.filtrarScursales_NoOperativas(a);
+                else{
+                    reCargarLista(obtenerArreglo(ordenes));
                 }
-                reCargarLista(obtenerArreglo(a));
-                */
+                
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
@@ -135,32 +134,29 @@ public class Display_Consulta_OrdenDeProvision extends JPanel{
         this.add(botones, this.con);
     }
 
-    //private void reCargarLista(String arreglo[]){
-    private void reCargarLista(){
+    private void reCargarLista(String arreglo[]){
         this.listado.removeAll();
         restricciones(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.BOTH);
-        //this.listado.add(cargarLista(arreglo), this.con);
-        this.listado.add(cargarLista(), this.con);
+        this.listado.add(cargarLista(arreglo), this.con);
         this.listado.repaint();
         this.listado.validate();
     }
 
-    //private JPanel cargarLista(String arreglo[]){
-    private JPanel cargarLista(){
+    private JPanel cargarLista(String arreglo[]){
         restricciones(0, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
         JPanel lis = new JPanel();
         lis.setLayout(new GridBagLayout());
         lis.setBackground(Color.BLACK);
 
         JList<String> lista = new JList<>();
-        //lista.setListData(arreglo);
+        lista.setListData(arreglo);
         lista.setBackground(Color.BLACK);
         lista.setForeground(Color.CYAN);
         lista.setVisibleRowCount(10);
         lista.setFixedCellHeight(50);
         JScrollPane scroll = new JScrollPane(lista);
         scroll.setBackground(Color.BLACK);
-        restricciones(0, 1, 5, 1, 1.0, 0.95, GridBagConstraints.BOTH);
+        restricciones(0, 1, 6, 1, 1.0, 0.95, GridBagConstraints.BOTH);
         lis.add(scroll, this.con);
         
         JLabel id = new JLabel(" Id ");
@@ -175,36 +171,30 @@ public class Display_Consulta_OrdenDeProvision extends JPanel{
         restricciones(1, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
         lis.add(nombre, this.con);
 
-        JLabel hapertura = new JLabel(" Sucursal destino ");
+        JLabel hapertura = new JLabel(" Tiempo Estimado ");
         hapertura.setBackground(Color.BLACK);
         hapertura.setForeground(Color.GRAY);
         restricciones(2, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
         lis.add(hapertura, this.con);
         
-        JLabel hcierre = new JLabel(" Tiempo Estimado ");
+        JLabel hcierre = new JLabel(" Sucursal Origen ");
         hcierre.setBackground(Color.BLACK);
         hcierre.setForeground(Color.GRAY);
         restricciones(3, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
         lis.add(hcierre, this.con);
 
-        JLabel estado = new JLabel(" Estado ");
+        JLabel estado = new JLabel(" Sucursal Destino ");
         estado.setBackground(Color.BLACK);
         estado.setForeground(Color.GRAY);
         restricciones(4, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
         lis.add(estado, this.con);
-        /*
-        JLabel pageRank = new JLabel(" Page Rank");
+        
+        JLabel pageRank = new JLabel(" Estado ");
         pageRank.setBackground(Color.BLACK);
         pageRank.setForeground(Color.GRAY);
         restricciones(5, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
         lis.add(pageRank, this.con);
-
-        JLabel flujoMaximo = new JLabel(" Flujo Maximo");
-        flujoMaximo.setBackground(Color.BLACK);
-        flujoMaximo.setForeground(Color.GRAY);
-        restricciones(6, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
-        lis.add(flujoMaximo, this.con);
-        */
+        
         JPanel control = new JPanel();
         control.setLayout(new GridLayout(2,1));
         JButton Boton3 = new JButton("Dar de Baja");
@@ -240,7 +230,30 @@ public class Display_Consulta_OrdenDeProvision extends JPanel{
         });
         JButton Boton4 = new JButton("Asignar Recorrido");
         Boton4.setBackground(Color.RED);
-        //Implementar Asignacion de recorrido
+        Boton4.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+
+                if(lista.getSelectedValue() != null){
+                    String valor[] = lista.getSelectedValue().split("      ");
+
+                    for(Orden_Provision p : ordenes){
+
+                        if(valor[1].equals(p.getId().toString())){
+                            ventana.nuevoPanel(new Display_AsignarRecorrido(ventana, p));
+                        }
+                        
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Por favor seleccione una Orden de Provision", "Orden de Provision no seleccionada", JOptionPane.WARNING_MESSAGE);
+                }
+                
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+            }
+            
+        });
         control.add(Boton3);
         control.add(Boton4);
         restricciones(3, 0, 1, 1, 0.10, 1.0, GridBagConstraints.BOTH);
@@ -249,28 +262,27 @@ public class Display_Consulta_OrdenDeProvision extends JPanel{
         return lis;
     }
 
-    private String[] obtenerArreglo(ArrayList<Centro_Logistico> a){
+    private String[] obtenerArreglo(ArrayList<Orden_Provision> a){
         ArrayList<String> arr = new ArrayList<String>();
         int cont=0;
-        for(Centro_Logistico b : a){
-            if(b instanceof Puerto){
-                arr.add(cont, "      "+b.getId_logistico()+
-                          "      "+b.getNombre()+
-                          "      "+b.getHorario_apertura()+
-                          "      "+b.getHorario_cierre()+
-                          "      "+b.getEstado().toString()+
-                          "      "+b.getPageRank()+
-                          "      Punto de Referencia");
+        for(Orden_Provision b : a){
+            if(b.getSucursalOrigen() == null || b.getRecorrido() == null){
+                arr.add(cont, "      "+b.getId()+
+                      "      "+b.getFechaDeOrden()+
+                      "      "+b.getTiempoEsperadoHoras()+
+                      "      null"+
+                      "      "+b.getSucursalDestino().getId_logistico()+
+                      "      "+b.getEstado().toString()+"  ");
             }
             else{
-                arr.add(cont, "      "+b.getId_logistico()+
-                          "      "+b.getNombre()+
-                          "      "+b.getHorario_apertura()+
-                          "      "+b.getHorario_cierre()+
-                          "      "+b.getEstado().toString()+
-                          "      "+b.getPageRank()+
-                          "      "+grafo.flujoMaximo(b)+"  ");
+                arr.add(cont, "      "+b.getId()+
+                      "      "+b.getFechaDeOrden()+
+                      "      "+b.getTiempoEsperadoHoras()+
+                      "      "+b.getSucursalOrigen().getId_logistico()+
+                      "      "+b.getSucursalDestino().getId_logistico()+
+                      "      "+b.getEstado().toString()+"  ");
             }
+            
             
             //System.out.println(arr.get(cont));
             cont++;
@@ -281,27 +293,25 @@ public class Display_Consulta_OrdenDeProvision extends JPanel{
 
     }
 
-    private String[] obtenerArreglo(List<Centro_Logistico> a){
+    private String[] obtenerArreglo(List<Orden_Provision> a){
         ArrayList<String> arr = new ArrayList<String>();
         int cont=0;
-        for(Centro_Logistico b : a){
-            if(b instanceof Puerto){
-                arr.add(cont, "      "+b.getId_logistico()+
-                          "      "+b.getNombre()+
-                          "      "+b.getHorario_apertura()+
-                          "      "+b.getHorario_cierre()+
-                          "      "+b.getEstado().toString()+
-                          "      "+b.getPageRank()+
-                          "      Punto de Referencia");
+        for(Orden_Provision b : a){
+            if(b.getSucursalOrigen() == null || b.getRecorrido() == null){
+                arr.add(cont, "      "+b.getId()+
+                      "      "+b.getFechaDeOrden()+
+                      "      "+b.getTiempoEsperadoHoras()+
+                      "      null"+
+                      "      "+b.getSucursalDestino().getId_logistico()+
+                      "      "+b.getEstado().toString()+"  ");
             }
             else{
-                arr.add(cont, "      "+b.getId_logistico()+
-                          "      "+b.getNombre()+
-                          "      "+b.getHorario_apertura()+
-                          "      "+b.getHorario_cierre()+
-                          "      "+b.getEstado().toString()+
-                          "      "+b.getPageRank()+
-                          "      "+grafo.flujoMaximo(b)+"  ");
+                arr.add(cont, "      "+b.getId()+
+                      "      "+b.getFechaDeOrden()+
+                      "      "+b.getTiempoEsperadoHoras()+
+                      "      "+b.getSucursalOrigen().getId_logistico()+
+                      "      "+b.getSucursalDestino().getId_logistico()+
+                      "      "+b.getEstado().toString()+"  ");
             }
             //System.out.println(arr.get(cont));
             cont++;

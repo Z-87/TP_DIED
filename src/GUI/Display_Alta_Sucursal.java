@@ -135,7 +135,7 @@ public class Display_Alta_Sucursal extends JPanel{
               }
                 
 
-              throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+              //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
         });
