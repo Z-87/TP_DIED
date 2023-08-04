@@ -53,7 +53,6 @@ public class Display_Principal extends JPanel{
         pan1.setLayout(new GridLayout(0,1));
         JButton Boton1 = new JButton("SUCURSALES");
         Boton1.setBackground(Color.GRAY);
-
         Boton1.addActionListener(new ActionListener() {
 
             @Override

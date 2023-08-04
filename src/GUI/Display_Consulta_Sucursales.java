@@ -164,22 +164,24 @@ public class Display_Consulta_Sucursales extends JPanel{
             
             public void actionPerformed(ActionEvent arg0) {
                 List<Centro_Logistico> a = grafo.getSucursales();
-                if(campo1.getText() != null){
+                if(!(campo1.getText()).equals("")){
                     String cam = campo1.getText();
                     a = grafo.filtrarScursales_Nombre(a, cam);
                 }
-                if(campo2.getText() != null){
+                if(!(campo2.getText()).equals("")){
                     String cam = campo2.getText();
                     a = grafo.filtrarScursales_HorarioApertura(a, cam);
                 }
-                if(campo3.getText() != null){
+                if(!(campo3.getText()).equals("")){
                     String cam = campo3.getText();
                     a = grafo.filtrarScursales_HorarioCierre(a, cam);
                 }
                 if(check1.isSelected() && !check2.isEnabled()){
+                    System.out.println("Entro aca 4");
                     a = grafo.filtrarScursales_Operativas(a);
                 }
                 if(check2.isSelected() && !check1.isEnabled()){
+                    System.out.println("Entro aca 5");
                     a = grafo.filtrarScursales_NoOperativas(a);
                 }
                 reCargarLista(obtenerArreglo(a));

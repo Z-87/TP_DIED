@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Gestor_Producto {
   private ArrayList<Producto> productos = new ArrayList<>();
@@ -146,5 +148,25 @@ public class Gestor_Producto {
   }
   public ArrayList<Producto> getProductos() {    
     return productos;
+  }
+
+  public Producto consultarProducto_Id(Integer id){
+        return this.productos.stream().filter(a -> id.equals(a.getId_producto())).collect(Collectors.toList()).get(0);
+  }
+
+  public List<Producto> filtrarProducto_Id(List<Producto> lista,Integer id){
+        return lista.stream().filter(a -> id.equals(a.getId_producto())).collect(Collectors.toList());
+  }
+  public List<Producto> filtraProducto_Nombre(List<Producto> lista,String nombre){
+        return lista.stream().filter(a -> nombre.equals(a.getNombre())).collect(Collectors.toList());
+  }
+  public List<Producto> filtrarProducto_PrecioExacto(List<Producto> lista,Double precio){
+        return lista.stream().filter(a -> precio.equals(a.getPrecio())).collect(Collectors.toList());
+  }
+  public List<Producto> filtrarProducto_PrecioMayorIgual(List<Producto> lista,Double precio){
+        return lista.stream().filter(a -> a.getPrecio() >= precio).collect(Collectors.toList());
+  }
+  public List<Producto> filtrarProducto_PrecioMenor(List<Producto> lista,Double precio){
+        return lista.stream().filter(a -> a.getPrecio() < precio).collect(Collectors.toList());
   }
 }

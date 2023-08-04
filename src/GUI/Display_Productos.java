@@ -44,6 +44,17 @@ public class Display_Productos extends JPanel{
         pan1.setLayout(new GridLayout(0,1));
         JButton Boton1 = new JButton("Consultar Productos");
         Boton1.setBackground(Color.GRAY);
+        Boton1.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+
+                ventana.nuevoPanel(new Display_Consulta_Productos(ventana));
+
+                throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+            }
+            
+        });
         JButton Boton2 = new JButton("Alta Productos");
         Boton2.setBackground(Color.GRAY);
         JButton Boton3 = new JButton("Volver");
