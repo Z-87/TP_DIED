@@ -117,10 +117,12 @@ public class Grafo {
             try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(id_logistico, nombre, estado, horario_apertura, horario_cierre) VALUES ("+a.getId_logistico()+",'"+a.getNombre()+"','"+((a.getEstado()).toString())+"','"+a.getHorario_apertura()+"','"+a.getHorario_cierre()+"')");
-            tabla.executeUpdate();
+            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(nombre, estado, horario_apertura, horario_cierre) VALUES ('"+a.getNombre()+"','"+((a.getEstado()).toString())+"','"+a.getHorario_apertura()+"','"+a.getHorario_cierre()+"') RETURNING id_logistico");
+            rs = tabla.executeQuery();
+            rs.next();
+            String id = rs.getString("id_logistico");
             tabla.close();
-            tabla = conn.prepareStatement("INSERT INTO tp.Sucursal(id_centro) VALUES ("+a.getId_logistico()+")");
+            tabla = conn.prepareStatement("INSERT INTO tp.Sucursal(id_sucursal) VALUES ("+id+")");
             tabla.executeUpdate();
 
             sucursales.add(a);
@@ -180,10 +182,12 @@ public class Grafo {
             try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(id_logistico, nombre, estado, horario_apertura, horario_cierre) VALUES ("+a.getId_logistico()+",'"+a.getNombre()+"','"+((a.getEstado()).toString())+"','"+a.getHorario_apertura()+"','"+a.getHorario_cierre()+"')");
-            tabla.executeUpdate();
+            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(nombre, estado, horario_apertura, horario_cierre) VALUES ('"+a.getNombre()+"','"+((a.getEstado()).toString())+"','"+a.getHorario_apertura()+"','"+a.getHorario_cierre()+"') RETURNING id_logistico");
+            rs = tabla.executeQuery();
+            rs.next();
+            String id = rs.getString("id_logistico");
             tabla.close();
-            tabla = conn.prepareStatement("INSERT INTO tp.Centro(id_centro) VALUES ("+a.getId_logistico()+")");
+            tabla = conn.prepareStatement("INSERT INTO tp.Centro(id_sucursal) VALUES ("+id+")");
             tabla.executeUpdate();
 
             sucursales.add(a);
@@ -240,10 +244,12 @@ public class Grafo {
             try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(id_logistico, nombre, estado, horario_apertura, horario_cierre) VALUES ("+a.getId_logistico()+",'"+a.getNombre()+"','"+((a.getEstado()).toString())+"','"+a.getHorario_apertura()+"','"+a.getHorario_cierre()+"')");
-            tabla.executeUpdate();
+            tabla = conn.prepareStatement("INSERT INTO tp.Centro_Logistico(nombre, estado, horario_apertura, horario_cierre) VALUES ('"+a.getNombre()+"','"+((a.getEstado()).toString())+"','"+a.getHorario_apertura()+"','"+a.getHorario_cierre()+"') RETURNING id_logistico");
+            rs = tabla.executeQuery();
+            rs.next();
+            String id = rs.getString("id_logistico");
             tabla.close();
-            tabla = conn.prepareStatement("INSERT INTO tp.Puerto(id_puerto) VALUES ("+a.getId_logistico()+")");
+            tabla = conn.prepareStatement("INSERT INTO tp.Puerto(id_puerto) VALUES ("+id+")");
             tabla.executeUpdate();
 
             sucursales.add(a);

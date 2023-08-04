@@ -101,4 +101,8 @@ public abstract class Centro_Logistico {
       this.id_logistico = id_logistico;
     }
     
+    @Override
+    public String toString() {
+      return this.nombre;
+    }
 }
