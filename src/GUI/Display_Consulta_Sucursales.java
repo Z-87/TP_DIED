@@ -1,6 +1,7 @@
 package GUI;
 
 import modelo.Grafo;
+import modelo.Producto;
 import modelo.Puerto;
 import modelo.Centro_Logistico;
 import java.awt.Color;
@@ -316,7 +317,30 @@ public class Display_Consulta_Sucursales extends JPanel{
             
         });
         JButton Boton4 = new JButton("Editar Sucursal");
-        Boton4.setBackground(Color.RED);
+        Boton4.setBackground(Color.GRAY);
+        Boton4.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if(lista.getSelectedValue() != null){
+                    String valor[] = lista.getSelectedValue().split("      ");
+
+                    for(Centro_Logistico p : grafo.getSucursales()){
+
+                        if(valor[1].equals(p.getId_logistico().toString())){
+                            ventana.nuevoPanel(new Display_Editar_Sucursal(ventana, p));
+                        }
+                        
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "por favor seleccione un Producto", "Producto no seleccionado", JOptionPane.WARNING_MESSAGE);
+                }
+                
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+            }
+            
+        });
         //Implementar la misma panel que el que se uso para el alta de sucursales
         JButton Boton5 = new JButton("Generar Orden de Provision");
         Boton5.setBackground(Color.RED);

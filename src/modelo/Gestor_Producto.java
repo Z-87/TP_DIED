@@ -87,14 +87,19 @@ public class Gestor_Producto {
       Class.forName("org.postgresql.Driver");
       conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
       tabla = conn.prepareStatement(
-        "UPDATE tp.producto SET" + 
+        "UPDATE tp.producto SET " + 
           "nombre = '" + productoEditado.getNombre() + "', " +
           "descripcion = '" + productoEditado.getDescripcion() + "', " +
           "precio = " + productoEditado.getPrecio() +
-        "WHERE id_producto = '" + producto.getId_producto() + "'"
+        "WHERE id_producto = " + producto.getId_producto()
       );
       tabla.executeUpdate();
-      productos.set(productos.indexOf(producto), productoEditado);
+      
+      Integer index = null;
+      for(Producto p : productos) {
+        if(p.getId_producto() == producto.getId_producto()) index = productos.indexOf(p);
+      }
+      productos.set(index, productoEditado);
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (SQLException e) {
