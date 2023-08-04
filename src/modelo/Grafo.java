@@ -621,9 +621,10 @@ public class Grafo {
             try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
-            tabla = conn.prepareStatement("INSERT INTO tp.Ruta(id_ruta, sucursal_origen, sucursal_destino, estado, capacidad, duracion) VALUES ("+r.getId_ruta()+","+r.getSucursal_Origen().getId_logistico()+","+r.getSucursal_Destino().getId_logistico()+",'"+((r.getEstado()).toString())+"',"+(r.getCapacidad().toString())+","+r.getDuracion().toString()+")");
-            tabla.executeUpdate();
-
+            tabla = conn.prepareStatement("INSERT INTO tp.Ruta(sucursal_origen, sucursal_destino, estado, capacidad, duracion) VALUES ("+r.getSucursal_Origen().getId_logistico()+","+r.getSucursal_Destino().getId_logistico()+",'"+((r.getEstado()).toString())+"',"+(r.getCapacidad().toString())+","+r.getDuracion().toString()+") RETURNING id_ruta");
+            rs = tabla.executeQuery();
+            
+            r.setId_ruta(rs.getInt("id_ruta"));
             rutas.add(r);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();

@@ -81,7 +81,7 @@ public class Display_Alta_Ruta extends JPanel{
         inputDuracion.setEnabled(true);
         pan4.add(labelDuracion);
         pan4.add(inputDuracion);
-        JLabel labelEstadoRuta = new JLabel("Estado Sucursal");
+        JLabel labelEstadoRuta = new JLabel("Estado Ruta");
         labelEstadoRuta.setBackground(Color.BLACK);
         labelEstadoRuta.setForeground(Color.GRAY);
         JComboBox<String> inputEstadoRuta = new JComboBox<>(Arrays.toString(ESTADO_RUTA.values()).replaceAll("^.|.$", "").split(", "));
@@ -105,19 +105,24 @@ public class Display_Alta_Ruta extends JPanel{
             @Override
             public void actionPerformed(ActionEvent arg0) {
               // System.out.println((String)inputTipoSucursal.getSelectedItem());
-              Ruta ruta = new Ruta(
-                null, 
-                (Centro_Logistico)inputSucursalOrigen.getSelectedItem(), 
-                (Centro_Logistico)inputSucursalDestino.getSelectedItem(),
-                Double.parseDouble(inputCapacidad.getText()), 
-                Integer.parseInt(inputDuracion.getText()),
-                ESTADO_RUTA.valueOf((String)inputEstadoRuta.getSelectedItem())
-              );
-              grafo.cargarRuta(ruta);
-              JOptionPane.showMessageDialog(null, "Se creó una ruta desde " + inputSucursalOrigen.getSelectedItem().toString() + " hasta " + inputSucursalDestino.getSelectedItem().toString() + ".", "Ruta creada correctamente", JOptionPane.INFORMATION_MESSAGE);
-              ventana.nuevoPanel(new Display_Principal(ventana));
+              
+              try {
+                Ruta ruta = new Ruta(
+                  null, 
+                  (Centro_Logistico)inputSucursalOrigen.getSelectedItem(), 
+                  (Centro_Logistico)inputSucursalDestino.getSelectedItem(),
+                  Double.parseDouble(inputCapacidad.getText()), 
+                  Integer.parseInt(inputDuracion.getText()),
+                  ESTADO_RUTA.valueOf((String)inputEstadoRuta.getSelectedItem())
+                );
+                grafo.cargarRuta(ruta);
+                JOptionPane.showMessageDialog(null, "Se creó una ruta desde " + inputSucursalOrigen.getSelectedItem().toString() + " hasta " + inputSucursalDestino.getSelectedItem().toString() + ".", "Ruta creada correctamente", JOptionPane.INFORMATION_MESSAGE);
+              
+                ventana.nuevoPanel(new Display_Principal(ventana));
+              } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error al crear la ruta", JOptionPane.ERROR_MESSAGE);
+              }
 
-              throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
         });

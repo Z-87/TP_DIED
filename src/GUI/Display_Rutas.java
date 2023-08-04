@@ -55,7 +55,7 @@ public class Display_Rutas extends JPanel{
             
         });
         JButton Boton2 = new JButton("Alta Ruta");
-        Boton2.setBackground(Color.RED);
+        Boton2.setBackground(Color.GRAY);
         Boton2.addActionListener(new ActionListener() {
 
           @Override
