@@ -97,38 +97,43 @@ public class Display_Alta_Sucursal extends JPanel{
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-              Grafo grafo = new Grafo();
-              if(inputTipoSucursal.getSelectedItem().equals("Sucursal")){
-                Sucursal nuevaSucursal = new Sucursal(
-                  null,
-                  inputNombreSucursal.getText(),
-                  ESTADO_SUCURSAL.valueOf((String)inputEstadoSucursal.getSelectedItem()),
-                  inputHorarioApertura.getText(),
-                  inputHorarioCierre.getText()
-                );
-                grafo.cargarSucursal(nuevaSucursal);
-              }else if(inputTipoSucursal.getSelectedItem().equals("Puerto")){
-                Puerto nuevaSucursal = new Puerto(
-                  null,
-                  inputNombreSucursal.getText(),
-                  ESTADO_SUCURSAL.valueOf((String)inputEstadoSucursal.getSelectedItem()),
-                  inputHorarioApertura.getText(),
-                  inputHorarioCierre.getText()
-                );
-                grafo.cargarPuerto(nuevaSucursal);
-              }else {
-                Centro nuevaSucursal = new Centro(
-                  null,
-                  inputNombreSucursal.getText(),
-                  ESTADO_SUCURSAL.valueOf((String)inputEstadoSucursal.getSelectedItem()),
-                  inputHorarioApertura.getText(),
-                  inputHorarioCierre.getText()
-                );
-                grafo.cargarCentro(nuevaSucursal);
+              try {
+                Grafo grafo = new Grafo();
+                if(inputTipoSucursal.getSelectedItem().equals("Sucursal")){
+                  Sucursal nuevaSucursal = new Sucursal(
+                    null,
+                    inputNombreSucursal.getText(),
+                    ESTADO_SUCURSAL.valueOf((String)inputEstadoSucursal.getSelectedItem()),
+                    inputHorarioApertura.getText(),
+                    inputHorarioCierre.getText()
+                  );
+                  grafo.cargarSucursal(nuevaSucursal);
+                }else if(inputTipoSucursal.getSelectedItem().equals("Puerto")){
+                  Puerto nuevaSucursal = new Puerto(
+                    null,
+                    inputNombreSucursal.getText(),
+                    ESTADO_SUCURSAL.valueOf((String)inputEstadoSucursal.getSelectedItem()),
+                    inputHorarioApertura.getText(),
+                    inputHorarioCierre.getText()
+                  );
+                  grafo.cargarPuerto(nuevaSucursal);
+                }else {
+                  Centro nuevaSucursal = new Centro(
+                    null,
+                    inputNombreSucursal.getText(),
+                    ESTADO_SUCURSAL.valueOf((String)inputEstadoSucursal.getSelectedItem()),
+                    inputHorarioApertura.getText(),
+                    inputHorarioCierre.getText()
+                  );
+                  grafo.cargarCentro(nuevaSucursal);
+                }
+                
+                JOptionPane.showMessageDialog(null, "Se creó la sucursal " + inputNombreSucursal.getText() + ".", "Sucursal creada correctamente", JOptionPane.INFORMATION_MESSAGE);
+                ventana.nuevoPanel(new Display_Sucursales(ventana));
+              } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error al crear la sucursal", JOptionPane.ERROR_MESSAGE);
               }
-              
-              JOptionPane.showMessageDialog(null, "Se creó la sucursal " + inputNombreSucursal.getText() + ".", "Sucursal creada correctamente", JOptionPane.INFORMATION_MESSAGE);
-              ventana.nuevoPanel(new Display_Principal(ventana));
+                
 
               throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }

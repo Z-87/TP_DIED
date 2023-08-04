@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import exceptions.ProductoNoEliminable;
+
 public class Gestor_Producto {
   private ArrayList<Producto> productos = new ArrayList<>();
 
@@ -46,7 +48,7 @@ public class Gestor_Producto {
     }
   }
 
-  public void eliminarProducto(Producto producto) {
+  public void eliminarProducto(Producto producto) throws ProductoNoEliminable {
     Connection conn = null;
     PreparedStatement tabla = null;
     ResultSet rs = null;
@@ -63,6 +65,7 @@ public class Gestor_Producto {
       e.printStackTrace();
     } catch (SQLException e) {
       e.printStackTrace();
+      throw new ProductoNoEliminable("El producto está asociado a stocks vigentes que debe eliminar previamente.");
     } catch (EnumConstantNotPresentException e){
       e.printStackTrace();
     } 
