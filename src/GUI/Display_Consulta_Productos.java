@@ -22,6 +22,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import exceptions.ProductoNoEliminable;
+
 public class Display_Consulta_Productos extends JPanel{
     JPanel listado;
     JPanel botones;
@@ -268,14 +270,20 @@ public class Display_Consulta_Productos extends JPanel{
                         if(valor[1].equals(p.getId_producto().toString())){
                             int n = 5;
                             n = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar el Prodcuto "+p.getId_producto()+"?","Eliminar Producto", JOptionPane.YES_NO_OPTION);
-                            if(n == 0) gestor.eliminarProducto(p);
+                            if(n == 0){
+                                try{
+                                    gestor.eliminarProducto(p);
+                                } catch(ProductoNoEliminable e){
+                                    JOptionPane.showMessageDialog(null, e.getMessage(), "Error al Eliminar Producto", JOptionPane.ERROR_MESSAGE);
+                                }
+                            } 
                             reCargarLista(obtenerArreglo(gestor.getProductos()));
                         }
                         
                     }
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, "por favor seleccione una Ruta", "Ruta no seleccionada", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "por favor seleccione un Producto", "Producto no seleccionado", JOptionPane.WARNING_MESSAGE);
                 }
                 
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
