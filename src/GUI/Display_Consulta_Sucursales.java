@@ -316,10 +316,10 @@ public class Display_Consulta_Sucursales extends JPanel{
             
         });
         JButton Boton4 = new JButton("Editar Sucursal");
-        Boton4.setBackground(Color.GRAY);
+        Boton4.setBackground(Color.RED);
         //Implementar la misma panel que el que se uso para el alta de sucursales
         JButton Boton5 = new JButton("Generar Orden de Provision");
-        Boton5.setBackground(Color.GRAY);
+        Boton5.setBackground(Color.RED);
         JButton Boton6 = new JButton("Consultar Stock");
         Boton6.setBackground(Color.GRAY);
         Boton6.addActionListener(new ActionListener() {

@@ -141,7 +141,7 @@ public class Display_Alta_Sucursal extends JPanel{
             @Override
             public void actionPerformed(ActionEvent arg0) {
 
-                ventana.nuevoPanel(new Display_Principal(ventana));
+                ventana.nuevoPanel(new Display_Sucursales(ventana));
 
                 throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
