@@ -2,7 +2,10 @@ package GUI;
 
 import modelo.Grafo;
 import modelo.Puerto;
+import modelo.Stock;
 import modelo.Centro_Logistico;
+import modelo.Gestor_Stock;
+
 import java.awt.Color;
 //import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -25,25 +28,34 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import exceptions.StockNoEncontradoException;
+
 public class Display_Consulta_Stock extends JPanel{
     JPanel listado;
     JPanel botones;
     GridBagConstraints con;
+    Gestor_Stock gestor;
+    Centro_Logistico sucursal;
     Grafo grafo;
     Ventana ventana;
 
-    public Display_Consulta_Stock(Ventana ventana){
+    public Display_Consulta_Stock(Ventana ventana, Centro_Logistico sucursal){
         this.ventana=ventana;
         this.setBackground(Color.BLACK);
         this.setLayout(new GridBagLayout());
         this.con = new GridBagConstraints();
+        this.sucursal = sucursal;
         //Font txbotones = new Font("Texto de Botones", ALLBITS, 30);
-
+        this.gestor = new Gestor_Stock();
         this.grafo = new Grafo();
-        //g.cargarSucursales();
-        String arreglo[] = this.obtenerArreglo(grafo.getSucursales());
-        //this.listado = cargarLista(arreglo);
-        this.listado = cargarLista();
+        String arreglo[] = null;
+        try{
+            arreglo = this.obtenerArreglo(gestor.buscarStock(sucursal));
+        } catch(StockNoEncontradoException e){
+            JOptionPane.showMessageDialog(null, e.getMessage(), "No se encontraron Stocks en la Sucursal", JOptionPane.ERROR_MESSAGE);
+            ventana.nuevoPanel(new Display_Consulta_Sucursales(ventana));
+        }
+        this.listado = cargarLista(arreglo);
         restricciones(1, 0, 1, 1, 0.65, 1.0, GridBagConstraints.BOTH);
         this.add(listado, this.con);
         
@@ -66,7 +78,7 @@ public class Display_Consulta_Stock extends JPanel{
 
         JPanel pan2 = new JPanel();
         pan2.setBackground(Color.BLACK);
-        pan2.setLayout(new GridLayout(2,1));
+        pan2.setLayout(new GridLayout(3,1));
         JLabel texto2 = new JLabel("Cantidad");
         texto2.setBackground(Color.BLACK);
         texto2.setForeground(Color.GRAY);
@@ -74,22 +86,78 @@ public class Display_Consulta_Stock extends JPanel{
         campo2.setBackground(Color.BLACK);
         campo2.setForeground(Color.GRAY);
         campo2.setEnabled(true);
+
+        JPanel checkbox1 = new JPanel();
+        checkbox1.setBackground(Color.BLACK);
+        checkbox1.setLayout(new GridLayout(1,3));
+        JCheckBox check1 = new JCheckBox("Mayor Igual a");
+        check1.setBackground(Color.BLACK);
+        check1.setForeground(Color.GRAY);
+        JCheckBox check2 = new JCheckBox("Menor");
+        check2.setBackground(Color.BLACK);
+        check2.setForeground(Color.GRAY);
+        JCheckBox check3 = new JCheckBox("Igual");
+        check3.setBackground(Color.BLACK);
+        check3.setForeground(Color.GRAY);
+        check1.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+                
+                if(check1.isSelected()){
+                    check2.setSelected(false);
+                    check3.setSelected(false);
+                }
+
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+            }
+            
+        });
+        check2.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+                
+                if(check2.isSelected()){
+                    check1.setSelected(false);
+                    check3.setSelected(false);
+                }
+
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+            }
+            
+        });
+        check3.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+                
+               if(check3.isSelected()){
+                    check1.setSelected(false);
+                    check2.setSelected(false);
+                }
+
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+            }
+            
+        });
+        checkbox1.add(check1);
+        checkbox1.add(check2);
+        checkbox1.add(check3);
         pan2.add(texto2);
         pan2.add(campo2);
-        
+        pan2.add(checkbox1);
+
         JPanel pan5 = new JPanel();
         pan5.setBackground(Color.BLACK);
         pan5.setLayout(new GridLayout(3,1));
         JLabel texto5 = new JLabel("Unidad");
         texto5.setBackground(Color.BLACK);
         texto5.setForeground(Color.GRAY);
-        JCheckBox check1 = new JCheckBox("Kilogramos");
-        check1.setBackground(Color.BLACK);
-        check1.setForeground(Color.GRAY);
-        JCheckBox check2 = new JCheckBox("Unidades");
-        check2.setBackground(Color.BLACK);
-        check2.setForeground(Color.GRAY);
-        check1.addActionListener(new ActionListener() {
+        JCheckBox check5 = new JCheckBox("Kilogramos");
+        check5.setBackground(Color.BLACK);
+        check5.setForeground(Color.GRAY);
+        JCheckBox check6 = new JCheckBox("Unidades");
+        check6.setBackground(Color.BLACK);
+        check6.setForeground(Color.GRAY);
+        check5.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent arg0) {
                 
@@ -100,7 +168,7 @@ public class Display_Consulta_Stock extends JPanel{
             }
             
         });
-        check2.addActionListener(new ActionListener() {
+        check6.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent arg0) {
                 
@@ -112,8 +180,8 @@ public class Display_Consulta_Stock extends JPanel{
             
         });
         pan5.add(texto5);
-        pan5.add(check1);
-        pan5.add(check2);
+        pan5.add(check5);
+        pan5.add(check6);
 
         JButton Boton1 = new JButton("Filtrar");
         Boton1.setBackground(Color.RED);
@@ -121,20 +189,42 @@ public class Display_Consulta_Stock extends JPanel{
         Boton1.addActionListener(new ActionListener() {
             
             public void actionPerformed(ActionEvent arg0) {
-                /*
-                List<Centro_Logistico> a = grafo.getSucursales();
+                
+                List<Stock> a = null;
+                try{
+                    a = gestor.buscarStock(sucursal);
+                } catch(StockNoEncontradoException e){
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "No se encontraron Stocks en la Sucursal", JOptionPane.ERROR_MESSAGE);
+                    ventana.nuevoPanel(new Display_Consulta_Sucursales(ventana));
+                }
+                
                 if(campo1.getText() != null){
                     String cam = campo1.getText();
-                    a = grafo.filtrarScursales_Nombre(a, cam);
+                    a = gestor.filtrarStock_Producto(a, cam, sucursal);
                 }
-                if(check1.isSelected() && !check2.isEnabled()){
-                    a = grafo.filtrarScursales_Operativas(a);
+                if(!(campo2.getText()).equals("")){
+                    if(check1.isSelected()){
+                        String cam = campo2.getText();
+                        a = gestor.filtrarStock_CantidadMayorIgual(a, (Double)Double.parseDouble(cam), sucursal);
+                    }
+                    else if(check2.isSelected()){
+                        String cam = campo2.getText();
+                        a = gestor.filtrarStock_CantidadMenor(a, (Double)Double.parseDouble(cam), sucursal);
+                    }
+                    else if(check3.isSelected()){
+                        String cam = campo2.getText();
+                        a = gestor.filtrarStock_CantidadExacta(a, (Double)Double.parseDouble(cam), sucursal);
+                    }
                 }
-                if(check2.isSelected() && !check1.isEnabled()){
-                    a = grafo.filtrarScursales_NoOperativas(a);
+                if(check5.isSelected() && !check2.isEnabled()){
+                    a = gestor.filtrarStock_UnidadKilogramos(a, sucursal);
                 }
+                if(check6.isSelected() && !check1.isEnabled()){
+                    a = gestor.filtrarStock_UnidadUnidad(a, sucursal);
+                }
+                
                 reCargarLista(obtenerArreglo(a));
-                */
+                
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
@@ -163,25 +253,22 @@ public class Display_Consulta_Stock extends JPanel{
         this.add(botones, this.con);
     }
 
-    //private void reCargarLista(String arreglo[]){
-    private void reCargarLista(){
+    private void reCargarLista(String arreglo[]){
         this.listado.removeAll();
         restricciones(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.BOTH);
-        //this.listado.add(cargarLista(arreglo), this.con);
-        this.listado.add(cargarLista(), this.con);
+        this.listado.add(cargarLista(arreglo), this.con);
         this.listado.repaint();
         this.listado.validate();
     }
 
-    //private JPanel cargarLista(String arreglo[]){
-    private JPanel cargarLista(){
+    private JPanel cargarLista(String arreglo[]){
         restricciones(0, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
         JPanel lis = new JPanel();
         lis.setLayout(new GridBagLayout());
         lis.setBackground(Color.BLACK);
 
         JList<String> lista = new JList<>();
-        //lista.setListData(arreglo);
+        lista.setListData(arreglo);
         lista.setBackground(Color.BLACK);
         lista.setForeground(Color.CYAN);
         lista.setVisibleRowCount(10);
@@ -242,26 +329,31 @@ public class Display_Consulta_Stock extends JPanel{
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                /*
+                
                 if(lista.getSelectedValue() != null){
                     String valor[] = lista.getSelectedValue().split("      ");
+                    try{
+                        for(Stock p : gestor.buscarStock(sucursal)){
 
-                    for(Centro_Logistico p : grafo.getSucursales()){
-
-                        if(valor[1].equals(p.getId_logistico().toString())){
-                            int n = 5;
-                            n = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar la sucursal "+p.getNombre()+"?","Eliminar Sucursal", JOptionPane.YES_NO_OPTION);
-                            System.out.println("ESTOOO "+n);
-                            if(n == 0) grafo.eliminarCentroLogistico(p);
-                            break;
+                            if(valor[1].equals(p.getId_stock().toString())){
+                                int n = 5;
+                                n = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar el Stock de "+p.getProducto().getNombre()+" de la sucursal "+p.getSucursal().getNombre()+"?","Eliminar Sucursal", JOptionPane.YES_NO_OPTION);
+                                System.out.println("ESTOOO "+n);
+                                if(n == 0) gestor.eliminarStock(p);
+                                break;
+                            }
+                            
                         }
-                        
+                    } catch(StockNoEncontradoException e){
+                        JOptionPane.showMessageDialog(null, e.getMessage(), "No se encontraron Stocks en la sucursal", JOptionPane.ERROR_MESSAGE);
+                        ventana.nuevoPanel(new Display_Consulta_Sucursales(ventana));
+
                     }
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "por favor seleccione un Stock", "Stock no seleccionado", JOptionPane.WARNING_MESSAGE);
                 }
-                */
+                
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
@@ -281,67 +373,40 @@ public class Display_Consulta_Stock extends JPanel{
         return lis;
     }
 
-    private String[] obtenerArreglo(ArrayList<Centro_Logistico> a){
+    private String[] obtenerArreglo(ArrayList<Stock> a){
         ArrayList<String> arr = new ArrayList<String>();
         int cont=0;
-        for(Centro_Logistico b : a){
-            if(b instanceof Puerto){
-                arr.add(cont, "      "+b.getId_logistico()+
-                          "      "+b.getNombre()+
-                          "      "+b.getHorario_apertura()+
-                          "      "+b.getHorario_cierre()+
-                          "      "+b.getEstado().toString()+
-                          "      "+b.getPageRank()+
-                          "      Punto de Referencia");
-            }
-            else{
-                arr.add(cont, "      "+b.getId_logistico()+
-                          "      "+b.getNombre()+
-                          "      "+b.getHorario_apertura()+
-                          "      "+b.getHorario_cierre()+
-                          "      "+b.getEstado().toString()+
-                          "      "+b.getPageRank()+
-                          "      "+grafo.flujoMaximo(b)+"  ");
-            }
-            
+        for(Stock b : a){
+            arr.add(cont, "      "+b.getId_stock()+
+                      "      "+b.getProducto().getNombre()+
+                      "      "+b.getCantidad()+
+                      "      "+b.getUnidad().toString()+
+                      "      "+b.getSucursal().getNombre()+
+                      "      ");
             //System.out.println(arr.get(cont));
             cont++;
         }
  
         String[] str = new String[arr.size()];
         return arr.toArray(str);
-
     }
 
-    private String[] obtenerArreglo(List<Centro_Logistico> a){
+    private String[] obtenerArreglo(List<Stock> a){
         ArrayList<String> arr = new ArrayList<String>();
         int cont=0;
-        for(Centro_Logistico b : a){
-            if(b instanceof Puerto){
-                arr.add(cont, "      "+b.getId_logistico()+
-                          "      "+b.getNombre()+
-                          "      "+b.getHorario_apertura()+
-                          "      "+b.getHorario_cierre()+
-                          "      "+b.getEstado().toString()+
-                          "      "+b.getPageRank()+
-                          "      Punto de Referencia");
-            }
-            else{
-                arr.add(cont, "      "+b.getId_logistico()+
-                          "      "+b.getNombre()+
-                          "      "+b.getHorario_apertura()+
-                          "      "+b.getHorario_cierre()+
-                          "      "+b.getEstado().toString()+
-                          "      "+b.getPageRank()+
-                          "      "+grafo.flujoMaximo(b)+"  ");
-            }
+        for(Stock b : a){
+            arr.add(cont, "      "+b.getId_stock()+
+                      "      "+b.getProducto().getNombre()+
+                      "      "+b.getCantidad()+
+                      "      "+b.getUnidad().toString()+
+                      "      "+b.getSucursal().getNombre()+
+                      "      ");
             //System.out.println(arr.get(cont));
             cont++;
         }
  
         String[] str = new String[arr.size()];
         return arr.toArray(str);
-
     }
     
     public void restricciones(int gridx, int gridy, int gridwidth, int gridheight ,double weightx, double weighty, int fill){

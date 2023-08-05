@@ -302,7 +302,6 @@ public class Display_Consulta_Sucursales extends JPanel{
                         if(valor[1].equals(p.getId_logistico().toString())){
                             int n = 5;
                             n = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar la sucursal "+p.getNombre()+"?","Eliminar Sucursal", JOptionPane.YES_NO_OPTION);
-                            System.out.println("ESTOOO "+n);
                             if(n == 0) grafo.eliminarCentroLogistico(p);
                             break;
                         }
@@ -350,8 +349,21 @@ public class Display_Consulta_Sucursales extends JPanel{
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                
-                ventana.nuevoPanel(new Display_Consulta_Stock(ventana)); 
+                if(lista.getSelectedValue() != null){
+                    String valor[] = lista.getSelectedValue().split("      ");
+
+                    for(Centro_Logistico p : grafo.getSucursales()){
+
+                        if(valor[1].equals(p.getId_logistico().toString())){
+                            ventana.nuevoPanel(new Display_Consulta_Stock(ventana, p));
+                            break;
+                        }
+                        
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "por favor seleccione una Ruta", "Ruta no seleccionada", JOptionPane.WARNING_MESSAGE);
+                }
 
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }

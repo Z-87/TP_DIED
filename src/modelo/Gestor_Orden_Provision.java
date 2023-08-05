@@ -231,17 +231,25 @@ public class Gestor_Orden_Provision {
       );
       rs = tabla.executeQuery();
       rs.next();
+      int id = rs.getInt("id_recorrido");
       int ordenRuta = 0;
       for(Ruta r : recorrido.getRutas()){
         tabla.close();
         tabla = conn.prepareStatement(
           "INSERT INTO tp.rutas_recorrido(id_recorrido, id_ruta, orden) VALUES" +
-          "(" + rs.getInt("id_recorrido") +  "," + r.getId_ruta() + ", " + ordenRuta + ")"
+          "(" +id+  "," + r.getId_ruta() + ", " + ordenRuta + ")"
         );
         tabla.executeUpdate();
         ordenRuta++;
       }
+      orden.setSucursalOrigen(recorrido.getRutas().get(0).getSucursal_Origen());
       orden.setRecorrido(recorrido);
+
+      tabla.close();
+      tabla = conn.prepareStatement(
+        "UPDATE tp.Orden_Provision SET sucursal_destino = " + orden.getSucursalDestino().getId_logistico() + ", estado = 'EN_PROCESO'"
+      );
+      tabla.executeUpdate();
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (SQLException e) {
@@ -267,11 +275,11 @@ public class Gestor_Orden_Provision {
     return ordenes.stream().filter(a -> ESTADO_ORDEN.PENDIENTE == a.getEstado()).collect(Collectors.toList());
   }
 
-  public ArrayList<ArrayList<Ruta>> posiblesCaminos(Orden_Provision orden){
-    ArrayList<ArrayList<Ruta>> aux = new ArrayList<ArrayList<Ruta>>();
+  public ArrayList<Recorrido> posiblesCaminos(Orden_Provision orden){
+    ArrayList<Recorrido> aux = new ArrayList<Recorrido>();
       Grafo grafo = new Grafo();
       for(Centro_Logistico posible : this.listarPosiblesOrigenes(orden)){
-          for(ArrayList<Ruta> aux2 : grafo.obtenerRutas(posible, orden.getSucursalDestino())){
+          for(Recorrido aux2 : grafo.obtenerRecorrido(posible, orden.getSucursalDestino())){
               aux.add(aux2);
           }
       }
