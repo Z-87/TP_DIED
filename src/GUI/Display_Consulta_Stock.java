@@ -1,7 +1,6 @@
 package GUI;
 
 import modelo.Grafo;
-import modelo.Puerto;
 import modelo.Stock;
 import modelo.Centro_Logistico;
 import modelo.Gestor_Stock;
@@ -11,7 +10,6 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-//import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -19,12 +17,10 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
@@ -161,9 +157,9 @@ public class Display_Consulta_Stock extends JPanel{
 
             public void actionPerformed(ActionEvent arg0) {
                 
-                if(check1.isSelected()) check2.setEnabled(false);
-                else check2.setEnabled(true);
-
+                if(check5.isSelected()){
+                    check6.setSelected(false);
+                }
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
@@ -172,9 +168,9 @@ public class Display_Consulta_Stock extends JPanel{
 
             public void actionPerformed(ActionEvent arg0) {
                 
-                if(check2.isSelected()) check1.setEnabled(false);
-                else check1.setEnabled(true);
-
+                if(check6.isSelected()){
+                    check5.setSelected(false);
+                }
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
             
@@ -184,7 +180,7 @@ public class Display_Consulta_Stock extends JPanel{
         pan5.add(check6);
 
         JButton Boton1 = new JButton("Filtrar");
-        Boton1.setBackground(Color.RED);
+        Boton1.setBackground(Color.GRAY);
         Boton1.setEnabled(true);
         Boton1.addActionListener(new ActionListener() {
             
@@ -198,7 +194,7 @@ public class Display_Consulta_Stock extends JPanel{
                     ventana.nuevoPanel(new Display_Consulta_Sucursales(ventana));
                 }
                 
-                if(campo1.getText() != null){
+                if(!(campo1.getText()).equals("")){
                     String cam = campo1.getText();
                     a = gestor.filtrarStock_Producto(a, cam, sucursal);
                 }
@@ -207,22 +203,22 @@ public class Display_Consulta_Stock extends JPanel{
                         String cam = campo2.getText();
                         a = gestor.filtrarStock_CantidadMayorIgual(a, (Double)Double.parseDouble(cam), sucursal);
                     }
-                    else if(check2.isSelected()){
+                    if(check2.isSelected()){
                         String cam = campo2.getText();
                         a = gestor.filtrarStock_CantidadMenor(a, (Double)Double.parseDouble(cam), sucursal);
                     }
-                    else if(check3.isSelected()){
+                    if(check3.isSelected()){
                         String cam = campo2.getText();
                         a = gestor.filtrarStock_CantidadExacta(a, (Double)Double.parseDouble(cam), sucursal);
                     }
                 }
-                if(check5.isSelected() && !check2.isEnabled()){
+                if(check5.isSelected()){
                     a = gestor.filtrarStock_UnidadKilogramos(a, sucursal);
                 }
-                if(check6.isSelected() && !check1.isEnabled()){
+                if(check6.isSelected()){
                     a = gestor.filtrarStock_UnidadUnidad(a, sucursal);
                 }
-                
+
                 reCargarLista(obtenerArreglo(a));
                 
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
@@ -295,35 +291,11 @@ public class Display_Consulta_Stock extends JPanel{
         hapertura.setForeground(Color.GRAY);
         restricciones(2, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
         lis.add(hapertura, this.con);
-        /*
-        JLabel hcierre = new JLabel(" Horario Cierre ");
-        hcierre.setBackground(Color.BLACK);
-        hcierre.setForeground(Color.GRAY);
-        restricciones(3, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
-        lis.add(hcierre, this.con);
-
-        JLabel estado = new JLabel(" Estado ");
-        estado.setBackground(Color.BLACK);
-        estado.setForeground(Color.GRAY);
-        restricciones(4, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
-        lis.add(estado, this.con);
-
-        JLabel pageRank = new JLabel(" Page Rank");
-        pageRank.setBackground(Color.BLACK);
-        pageRank.setForeground(Color.GRAY);
-        restricciones(5, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
-        lis.add(pageRank, this.con);
-
-        JLabel flujoMaximo = new JLabel(" Flujo Maximo");
-        flujoMaximo.setBackground(Color.BLACK);
-        flujoMaximo.setForeground(Color.GRAY);
-        restricciones(6, 0, 1, 1, 1.0, 0.05, GridBagConstraints.BOTH);
-        lis.add(flujoMaximo, this.con);
-        */
+    
         JPanel control = new JPanel();
         control.setLayout(new GridLayout(3,1));
         JButton Boton3 = new JButton("Dar de Baja");
-        Boton3.setBackground(Color.RED);
+        Boton3.setBackground(Color.GRAY);
         Boton3.setEnabled(true);
         Boton3.addActionListener(new ActionListener() {
 
@@ -379,7 +351,7 @@ public class Display_Consulta_Stock extends JPanel{
         for(Stock b : a){
             arr.add(cont, "      "+b.getId_stock()+
                       "      "+b.getProducto().getNombre()+
-                      "      "+b.getCantidad()+
+                      "      "+b.getCantidad().toString()+
                       "      "+b.getUnidad().toString()+
                       "      "+b.getSucursal().getNombre()+
                       "      ");
@@ -397,7 +369,7 @@ public class Display_Consulta_Stock extends JPanel{
         for(Stock b : a){
             arr.add(cont, "      "+b.getId_stock()+
                       "      "+b.getProducto().getNombre()+
-                      "      "+b.getCantidad()+
+                      "      "+b.getCantidad().toString()+
                       "      "+b.getUnidad().toString()+
                       "      "+b.getSucursal().getNombre()+
                       "      ");
