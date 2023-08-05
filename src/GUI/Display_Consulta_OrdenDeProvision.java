@@ -235,7 +235,7 @@ public class Display_Consulta_OrdenDeProvision extends JPanel{
         ArrayList<String> arr = new ArrayList<String>();
         int cont=0;
         for(Orden_Provision b : a){
-            if(b.getSucursalOrigen() == null || b.getRecorrido() == null){
+            if(b.getSucursalOrigen() == null /*|| b.getRecorrido() == null*/){
                 arr.add(cont, "      "+b.getId()+
                       "      "+b.getFechaDeOrden()+
                       "      "+b.getTiempoEsperadoHoras()+

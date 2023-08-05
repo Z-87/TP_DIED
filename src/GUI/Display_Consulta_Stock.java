@@ -310,8 +310,10 @@ public class Display_Consulta_Stock extends JPanel{
                             if(valor[1].equals(p.getId_stock().toString())){
                                 int n = 5;
                                 n = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar el Stock de "+p.getProducto().getNombre()+" de la sucursal "+p.getSucursal().getNombre()+"?","Eliminar Sucursal", JOptionPane.YES_NO_OPTION);
-                                System.out.println("ESTOOO "+n);
+                                // System.out.println("ESTOOO "+n);
                                 if(n == 0) gestor.eliminarStock(p);
+                                lis.repaint();
+                                lis.validate();
                                 break;
                             }
                             
@@ -330,11 +332,45 @@ public class Display_Consulta_Stock extends JPanel{
             }
             
         });
-        JButton Boton4 = new JButton("Edtar Stock");
-        Boton4.setBackground(Color.RED);
+        JButton Boton4 = new JButton("Editar Stock");
+        Boton4.setBackground(Color.GRAY);
+        Boton4.addActionListener(new ActionListener() {
+
+          @Override
+          public void actionPerformed(ActionEvent arg0) {
+            try {
+              if(lista.getSelectedValue() != null){
+                String valor[] = lista.getSelectedValue().split("      ");
+
+                for(Stock p : gestor.buscarStock(sucursal)){
+
+                    if(valor[1].equals(p.getId_stock().toString())){
+                      ventana.nuevoPanel(new Display_Editar_Stock(ventana, p));
+                    }
+                  }
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+              }  
+              else{
+                JOptionPane.showMessageDialog(null, "Por favor seleccione un Stock", "Stock no seleccionado", JOptionPane.WARNING_MESSAGE);
+              }
+            } catch (Exception e) {            }
+            
+          }
+          
+        });
         //Implementar edicion de Stock
         JButton Boton5 = new JButton("Alta Stock");
-        Boton5.setBackground(Color.RED);
+        Boton5.setBackground(Color.GRAY);
+        Boton5.addActionListener(new ActionListener() {
+
+          @Override
+          public void actionPerformed(ActionEvent arg0) {
+              ventana.nuevoPanel(new Display_Alta_Stock(ventana, sucursal));
+              
+              //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+          }
+          
+        });
         //Implementar edicion de Stock
         control.add(Boton3);
         control.add(Boton4);

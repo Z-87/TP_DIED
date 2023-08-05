@@ -27,9 +27,9 @@ public class Gestor_Orden_Provision {
       tabla = conn.prepareStatement(
         "INSERT INTO tp.orden_provision(fecha_orden, tiempo_esperado, estado, sucursal_origen, sucursal_destino, id_recorrido)" + 
         "VALUES ('" +
-          orden.getFechaDeOrden() + "','" + 
-          orden.getTiempoEsperadoHoras() + "','" +
-          "EN_PROCESO'," +
+          orden.getFechaDeOrden() + "'," + 
+          orden.getTiempoEsperadoHoras() + ",'" +
+          "PENDIENTE'," +
           "null,'" + 
           orden.getSucursalDestino().getId_logistico() + "', " +
           "null " +
@@ -247,8 +247,9 @@ public class Gestor_Orden_Provision {
 
       tabla.close();
       tabla = conn.prepareStatement(
-        "UPDATE tp.Orden_Provision SET sucursal_destino = " + orden.getSucursalDestino().getId_logistico() + ", estado = 'EN_PROCESO'"
-      );
+        "UPDATE tp.Orden_Provision SET sucursal_origen = " + orden.getSucursalOrigen().getId_logistico() + ", estado = 'EN_PROCESO', id_recorrido = " + id +
+        " WHERE id_orden = " + orden.getId()
+        );
       tabla.executeUpdate();
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
