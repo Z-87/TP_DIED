@@ -47,7 +47,7 @@ public class Display_Alta_Sucursal extends JPanel{
         inputNombreSucursal.setEnabled(true);
         pan4.add(labelNombreSucursal);
         pan4.add(inputNombreSucursal);
-        JLabel labelTipoSucursal = new JLabel("Estado Sucursal");
+        JLabel labelTipoSucursal = new JLabel("Tipo Sucursal");
         labelTipoSucursal.setBackground(Color.BLACK);
         labelTipoSucursal.setForeground(Color.GRAY);
         JComboBox<String> inputTipoSucursal = new JComboBox<>(("Sucursal,Puerto,Centro").split(","));
