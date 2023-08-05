@@ -30,6 +30,7 @@ public class Gestor_Stock {
         "RETURNING id_stock"
       );
       rs = tabla.executeQuery();
+      rs.next();
       stock = new Stock(rs.getInt("id_stock"), stock.getCantidad(), stock.getUnidad(), stock.getProducto(), stock.getSucursal());
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
@@ -85,10 +86,9 @@ public class Gestor_Stock {
       Class.forName("org.postgresql.Driver");
       conn = DriverManager.getConnection("jdbc:postgresql://localhost/", "tpadmin", "tpadmindied");
       tabla = conn.prepareStatement(
-        "UPDATE tp.stock SET" + 
-          "sucursal = '" + stockEditado.getSucursal().getId_logistico() + "', " +
-          "producto = '" + stockEditado.getProducto().getId_producto() + "', " +
-          "cantidad = " + stockEditado.getCantidad() + ". " +
+        "UPDATE tp.stock SET " + 
+          "id_producto = " + stockEditado.getProducto().getId_producto() + ", " +
+          "cantidad = " + stockEditado.getCantidad() + ", " +
           "unidad = '" + stockEditado.getUnidad() + "' " +
         "WHERE id_stock = " + stock.getId_stock()
       );

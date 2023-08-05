@@ -342,7 +342,30 @@ public class Display_Consulta_Sucursales extends JPanel{
         });
         //Implementar la misma panel que el que se uso para el alta de sucursales
         JButton Boton5 = new JButton("Generar Orden de Provision");
-        Boton5.setBackground(Color.RED);
+        Boton5.setBackground(Color.GRAY);
+        Boton5.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if(lista.getSelectedValue() != null){
+                    String valor[] = lista.getSelectedValue().split("      ");
+
+                    for(Centro_Logistico p : grafo.getSucursales()){
+
+                        if(valor[1].equals(p.getId_logistico().toString())){
+                            ventana.nuevoPanel(new Display_Alta_Orden_Provision(ventana, p));
+                        }
+                        
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "por favor seleccione un Producto", "Producto no seleccionado", JOptionPane.WARNING_MESSAGE);
+                }
+                
+                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+            }
+            
+        });
         JButton Boton6 = new JButton("Consultar Stock");
         Boton6.setBackground(Color.GRAY);
         Boton6.addActionListener(new ActionListener() {
