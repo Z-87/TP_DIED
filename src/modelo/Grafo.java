@@ -386,21 +386,6 @@ public class Grafo {
         return maximoFlujo;
     }
 
-    public double flujoMaximo(Centro_Logistico c){
-        double maximoFlujo = 0;
-        for(Centro_Logistico a : (sucursales.stream().filter(d -> d instanceof Puerto).collect(Collectors.toList())))
-            for(ArrayList<Ruta> f : this.obtenerRutas(a, c)){
-                maximoFlujo = f.get(0).getCapacidad();
-                for(int i=0; i < f.size()-1; i++){
-                    double cap = f.get(i).getCapacidad();
-                    if(cap < maximoFlujo){
-                        maximoFlujo = cap;
-                    }
-                }
-        }
-        return maximoFlujo;
-    }
-
     public double flujoMaximo(Centro_Logistico r, Centro_Logistico c){
         double maximoFlujo = 0;
         for(ArrayList<Ruta> f : this.obtenerRutas(r, c)){
@@ -881,6 +866,91 @@ public class Grafo {
             }
         }
         return rutas;
+    }
+
+    public ArrayList<Recorrido> obtenerRecorrido(Centro_Logistico origen, Centro_Logistico destino){
+        //Usamos recorrido en profundidad
+        boolean volver = true;
+        List<Centro_Logistico> adyacentes;
+        ArrayList<ArrayList<Centro_Logistico>> caminos = new ArrayList<ArrayList<Centro_Logistico>>();
+        Stack<Centro_Logistico> paso = new Stack<>();
+        Stack<Centro_Logistico> pendientes = new Stack<Centro_Logistico>();
+
+        List<Ruta> rutasAdyacentes;
+        ArrayList<Recorrido> recorridos = new ArrayList<Recorrido>();
+        Stack<Ruta> pasoR = new Stack<>();
+        Stack<Ruta> rutasPendientes = new Stack<Ruta>();
+
+        int nivel = 0, cont=0, camin=0;
+        ArrayList<Integer> arr = new ArrayList<Integer>();
+        pendientes.push(origen);
+        rutasPendientes.push(null);
+
+        arr.add(nivel, 0);
+        while(!pendientes.isEmpty()){
+            if(volver){
+                Centro_Logistico actual = pendientes.pop();
+                adyacentes = this.getAdyacentes(actual);
+                Ruta rutaActual = rutasPendientes.pop();
+                rutasAdyacentes = this.getRutasAdyacentes(actual);
+                pasoR.push(rutaActual);
+                paso.push(actual);
+                arr.add(nivel+1,0);
+                cont=0;
+                if(actual.equals(destino)){
+                    Recorrido rec = new Recorrido();
+                    ArrayList<Ruta> ruta = new ArrayList<>();
+                    int r=0;
+                    Double flujo=-1.0;
+                    Integer demora=0;
+                    for(Ruta f : pasoR){
+                        //System.out.print(f.getNombre()+" -> ");
+                        if(r>0){
+                            ruta.add(f);
+                            if(f.getCapacidad()< flujo || flujo == -1.0)flujo = f.getCapacidad();
+                            demora=demora+f.getDuracion();
+                        }
+                        r++;
+                    }
+                    rec.setDuracion(demora);
+                    rec.setPeso(flujo);
+                    rec.setRutas(ruta);
+                    recorridos.add(camin, rec);
+                    volver = false;
+                    camin++;
+                }
+                else{
+                    if(!adyacentes.isEmpty()){
+                    for(Centro_Logistico v : adyacentes){
+                        pendientes.push(v);
+                        cont++;
+                    }
+                    for(Ruta b : rutasAdyacentes){
+                        rutasPendientes.push(b);
+                    }
+                    nivel++;
+                    arr.set(nivel, cont);
+                    }
+                    else{
+                        volver=false;
+                    }
+                }
+            }
+            else{
+
+                if(arr.get(nivel+1) > 0){
+                    volver = true;
+                    nivel++;
+                }
+                else{
+                    paso.pop();
+                    pasoR.pop();
+                    arr.set(nivel, arr.get(nivel)-1);
+                    nivel--;
+                }
+            }
+        }
+        return recorridos;
     }
     
     public Grafo() {

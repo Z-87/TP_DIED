@@ -196,38 +196,8 @@ public class Display_Consulta_OrdenDeProvision extends JPanel{
         lis.add(pageRank, this.con);
         
         JPanel control = new JPanel();
-        control.setLayout(new GridLayout(2,1));
-        JButton Boton3 = new JButton("Dar de Baja");
-        Boton3.setBackground(Color.RED);
-        Boton3.setEnabled(true);
-        Boton3.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                /*
-                if(lista.getSelectedValue() != null){
-                    String valor[] = lista.getSelectedValue().split("      ");
-
-                    for(Centro_Logistico p : grafo.getSucursales()){
-
-                        if(valor[1].equals(p.getId_logistico().toString())){
-                            int n = 5;
-                            n = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar la sucursal "+p.getNombre()+"?","Eliminar Sucursal", JOptionPane.YES_NO_OPTION);
-                            System.out.println("ESTOOO "+n);
-                            if(n == 0) grafo.eliminarCentroLogistico(p);
-                            break;
-                        }
-                        
-                    }
-                }
-                else{
-                    JOptionPane.showMessageDialog(null, "por favor seleccione un Stock", "Stock no seleccionado", JOptionPane.WARNING_MESSAGE);
-                }
-                */
-                //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
-            }
-            
-        });
+        control.setLayout(new GridLayout(1,1));
+        
         JButton Boton4 = new JButton("Asignar Recorrido");
         Boton4.setBackground(Color.RED);
         Boton4.addActionListener(new ActionListener() {
@@ -254,7 +224,6 @@ public class Display_Consulta_OrdenDeProvision extends JPanel{
             }
             
         });
-        control.add(Boton3);
         control.add(Boton4);
         restricciones(3, 0, 1, 1, 0.10, 1.0, GridBagConstraints.BOTH);
         this.add(control,con);

@@ -15,6 +15,13 @@ public class Recorrido {
     this.rutas = rutas;
   }
 
+  public Recorrido() {
+    this.id_recorrido = null;
+    this.peso = null;
+    this.duracion = null;
+    this.rutas = null;
+  }
+
   public Integer getId_recorrido() {
     return id_recorrido;
   }

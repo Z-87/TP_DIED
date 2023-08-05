@@ -7,7 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.swing.JOptionPane;
+
+import GUI.Display_Consulta_Sucursales;
 import exceptions.StockNoEncontradoException;
 
 public class Gestor_Stock {
@@ -283,4 +287,64 @@ public class Gestor_Stock {
 
     return resultado;
   }
+
+  public List<Stock> filtrarStock_Producto(List<Stock> sto,String prod, Centro_Logistico cent){  
+    List<Stock> arr = null;
+    try{
+        arr = this.buscarStock(cent).stream().filter(a -> prod.equals(a.getProducto().getNombre())).collect(Collectors.toList());
+    }catch(StockNoEncontradoException e){
+        JOptionPane.showMessageDialog(null, e.getMessage(), "No se encontraron Stocks en la Sucursal", JOptionPane.ERROR_MESSAGE);
+    }
+    return arr;
+ }
+
+ public List<Stock> filtrarStock_CantidadExacta(List<Stock> sto,Double cant, Centro_Logistico cent){  
+    List<Stock> arr = null;
+    try{
+        arr = this.buscarStock(cent).stream().filter(a -> cant == a.getCantidad()).collect(Collectors.toList());
+    }catch(StockNoEncontradoException e){
+        JOptionPane.showMessageDialog(null, e.getMessage(), "No se encontraron Stocks en la Sucursal", JOptionPane.ERROR_MESSAGE);
+    }
+    return arr;
+ }
+
+ public List<Stock> filtrarStock_CantidadMayorIgual(List<Stock> sto,Double cant, Centro_Logistico cent){  
+    List<Stock> arr = null;
+    try{
+        arr = this.buscarStock(cent).stream().filter(a -> cant >= a.getCantidad()).collect(Collectors.toList());
+    }catch(StockNoEncontradoException e){
+        JOptionPane.showMessageDialog(null, e.getMessage(), "No se encontraron Stocks en la Sucursal", JOptionPane.ERROR_MESSAGE);
+    }
+    return arr;
+ }
+
+ public List<Stock> filtrarStock_CantidadMenor(List<Stock> sto,Double cant, Centro_Logistico cent){  
+    List<Stock> arr = null;
+    try{
+        arr = this.buscarStock(cent).stream().filter(a -> cant < a.getCantidad()).collect(Collectors.toList());
+    }catch(StockNoEncontradoException e){
+        JOptionPane.showMessageDialog(null, e.getMessage(), "No se encontraron Stocks en la Sucursal", JOptionPane.ERROR_MESSAGE);
+    }
+    return arr;
+ }
+
+ public List<Stock> filtrarStock_UnidadKilogramos(List<Stock> sto, Centro_Logistico cent){  
+    List<Stock> arr = null;
+    try{
+        arr = this.buscarStock(cent).stream().filter(a -> UNIDAD.KILOGRAMOS.equals(a.getUnidad())).collect(Collectors.toList());
+    }catch(StockNoEncontradoException e){
+        JOptionPane.showMessageDialog(null, e.getMessage(), "No se encontraron Stocks en la Sucursal", JOptionPane.ERROR_MESSAGE);
+    }
+    return arr;
+ }
+
+ public List<Stock> filtrarStock_UnidadUnidad(List<Stock> sto, Centro_Logistico cent){  
+    List<Stock> arr = null;
+    try{
+        arr = this.buscarStock(cent).stream().filter(a -> UNIDAD.UNIDADES.equals(a.getUnidad())).collect(Collectors.toList());
+    }catch(StockNoEncontradoException e){
+        JOptionPane.showMessageDialog(null, e.getMessage(), "No se encontraron Stocks en la Sucursal", JOptionPane.ERROR_MESSAGE);
+    }
+    return arr;
+ }
 }
