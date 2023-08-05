@@ -956,6 +956,7 @@ public class Grafo {
     public Grafo() {
       this.cargarSucursales();
       this.cargarRutas();
+      this.calcularPageRank();
     }
 }
 
