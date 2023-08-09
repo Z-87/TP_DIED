@@ -74,7 +74,7 @@ public class Display_AsignarRecorrido extends JPanel{
         control.setLayout(new GridLayout(2,1));
         
         JButton Boton3 = new JButton("Asignar Recorrido");
-        Boton3.setBackground(Color.RED);
+        Boton3.setBackground(Color.GRAY);
         Boton3.addActionListener(new ActionListener() {
 
             @Override
