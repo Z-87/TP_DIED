@@ -199,7 +199,7 @@ public class Display_Consulta_OrdenDeProvision extends JPanel{
         control.setLayout(new GridLayout(1,1));
         
         JButton Boton4 = new JButton("Asignar Recorrido");
-        Boton4.setBackground(Color.RED);
+        Boton4.setBackground(Color.GRAY);
         Boton4.addActionListener(new ActionListener() {
 
             @Override

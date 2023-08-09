@@ -136,8 +136,7 @@ public class Display_Consulta_Sucursales extends JPanel{
 
             public void actionPerformed(ActionEvent arg0) {
                 
-                if(check1.isSelected()) check2.setEnabled(false);
-                else check2.setEnabled(true);
+                if(check1.isSelected()) check2.setSelected(false);
 
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
@@ -147,8 +146,7 @@ public class Display_Consulta_Sucursales extends JPanel{
 
             public void actionPerformed(ActionEvent arg0) {
                 
-                if(check2.isSelected()) check1.setEnabled(false);
-                else check1.setEnabled(true);
+                if(check2.isSelected()) check1.setSelected(false);
 
                 //throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }

@@ -308,10 +308,10 @@ public class Display_Consulta_Rutas extends JPanel{
                     }
                 }
                 
-                if(check7.isSelected() && !check7.isEnabled()){
+                if(check7.isSelected()){
                     a = grafo.filtrarRutas_Operativas(a);
                 }
-                if(check8.isSelected() && !check8.isEnabled()){
+                if(check8.isSelected()){
                     a = grafo.filtrarRutas_NoOperativas(a);
                 }
 

@@ -134,7 +134,7 @@ public class Display_Editar_Ruta extends JPanel{
             @Override
             public void actionPerformed(ActionEvent arg0) {
 
-                ventana.nuevoPanel(new Display_Productos(ventana));
+                ventana.nuevoPanel(new Display_Consulta_Rutas(ventana));
 
                 throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
             }
