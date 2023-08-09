@@ -54,7 +54,7 @@ public class Display_Alta_Ruta extends JPanel{
         inputSucursalOrigen.setEnabled(true);
         pan4.add(labelSucursalOrigen);
         pan4.add(inputSucursalOrigen);
-        JLabel labelSucursalDestino = new JLabel("Sucursal Origen");
+        JLabel labelSucursalDestino = new JLabel("Sucursal Destino");
         labelSucursalDestino.setBackground(Color.BLACK);
         labelSucursalDestino.setForeground(Color.GRAY);
         JComboBox<Centro_Logistico> inputSucursalDestino = new JComboBox<>(listaStucursales);

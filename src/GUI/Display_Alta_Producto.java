@@ -98,7 +98,7 @@ public class Display_Alta_Producto extends JPanel{
                 gestor.crearProducto(producto);
                 JOptionPane.showMessageDialog(null, "Se creó el producto " + producto.getNombre() + ".", "Producto creado correctamente", JOptionPane.INFORMATION_MESSAGE);
               
-                ventana.nuevoPanel(new Display_Principal(ventana));
+                ventana.nuevoPanel(new Display_Productos(ventana));
               } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error al crear el producto", JOptionPane.ERROR_MESSAGE);
               }
